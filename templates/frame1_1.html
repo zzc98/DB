@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>书籍类别查询</title>
+    <script src="/static/lib/jquery.min.js"></script>
+    <script src="/static/lib/bootstrap.min.js"></script>
+    <script src="/static/lib/sweetalert.min.js"></script>
+    <script src="/static/js/frame1_1.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/lib/bootstrap.min.css"/>
+</head>
+<body>
+
+<!--增加书籍类别的模态框-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">增加新书籍类别</h4>
+            </div>
+            <div class="modal-body">
+                <div id="add">
+                    <form id="my_form1" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="add_kind_name" placeholder="书籍名称" name="kind_name">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="add_no()" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="add_submit()">增加</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--修改书籍类别的模态框-->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">修改信息</h4>
+            </div>
+            <div class="modal-body">
+                <div id="change">
+                    <div class="form-group">
+                        <label for="change_kind_id">ID</label>
+                        <input type="text" class="form-control" id="change_kind_id" placeholder="ID">
+                    </div>
+                    <div class="form-group">
+                        <label for="change_kind_name">书籍类别</label>
+                        <input type="text" class="form-control" id="change_kind_name" placeholder="书籍类别">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="change_submit()">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--书籍类别展示-->
+<h2 class="sub-header">Book Kind List <button class="btn btn-primary" style="margin-left: 10px" data-toggle="modal" data-target="#myModal">增加</button></h2>
+<table class="table table-hover table-bordered">
+    <tr>
+        <td style="width: 33%">类别ID</td>
+        <td style="width: 33%">书籍类别</td>
+        <td style="width: 33%; text-align: center">操作</td>
+    </tr>
+    {% for kind in kind_list %}
+        <tr>
+            <td>{{ kind.kind_id }}</td>
+            <td>{{ kind.kind_name }}</td>
+            <td style="text-align: center">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal2"
+                        onclick="change_kind('{{ kind.kind_id }}','{{ kind.kind_name }}')">
+                    修改
+                </button>
+                <button class="btn btn-danger" onclick="del_kind('{{ kind.kind_id }}')">
+                    删除
+                </button>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+</body>
+</html>

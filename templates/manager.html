@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>网上书店管理系统</title>
+    <script src="/static/lib/jquery.min.js"></script>
+    <script src="/static/lib/bootstrap.min.js"></script>
+    <script src="/static/js/manager.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/lib/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/manager.css"/>
+</head>
+<body>
+<div class="header">
+    <img src="/static/img/manager_book_store.png">
+    <a href="/manager/quit">Exit</a>
+</div>
+
+<div class="wrap">
+    <div class="left">
+        <div class="menu">
+            <div class="menu_title" id="menu1">
+                <img src="/static/img/menu1.png">
+                <span class="my_span1"> 书籍管理</span>
+                <img src="/static/img/hide.png" class="status_img" id="status_img1">
+            </div>
+            <div class="menu_item" id="wrap1">
+                <div class="item" id="frame1">书籍信息查询</div>
+                <div class="item" id="frame2">书籍类别管理</div>
+            </div>
+        </div>
+        <div class="menu">
+            <div class="menu_title" id="menu2">
+                <img src="/static/img/menu2.png">
+                <span class="my_span1"> 客户管理</span>
+                <img src="/static/img/hide.png" class="status_img" id="status_img2">
+            </div>
+            <div class="menu_item" id="wrap2">
+                <div class="item" id="frame3">客户信息管理</div>
+            </div>
+        </div>
+        <div class="menu">
+            <div class="menu_title" id="menu3">
+                <img src="/static/img/menu3.png">
+                <span class="my_span1"> 销售管理</span>
+                <img src="/static/img/hide.png" class="status_img" id="status_img3">
+            </div>
+            <div class="menu_item" id="wrap3">
+                <div class="item" id="frame6">书籍销售</div>
+                <div class="item" id="frame7">书籍预售</div>
+                <div class="item" id="frame8">退货</div>
+            </div>
+        </div>
+        <div class="menu">
+            <div class="menu_title" id="menu4">
+                <img src="/static/img/menu4.png">
+                <span class="my_span1">业绩统计</span>
+                <img src="/static/img/hide.png" class="status_img" id="status_img4">
+            </div>
+            <div class="menu_item" id="wrap4">
+                <div class="item" id="frame9">销售统计</div>
+                <div class="item" id="frame10">预售统计</div>
+                <div class="item" id="frame11">退货统计</div>
+            </div>
+        </div>
+    </div>
+    <div class="main">
+        <iframe src="" id="frameContent" onload="Height(this)"></iframe>
+    </div>
+</div>
+</body>
+</html>

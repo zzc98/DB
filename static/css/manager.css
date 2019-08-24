@@ -1,0 +1,106 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow-y: hidden
+}
+
+.header {
+    width: 100%;
+    background-color: #222222;
+    height: 5%;
+    border-bottom: 2px solid #919191;
+
+}
+
+.wrap {
+    width: 100%;
+    height: 95%;
+}
+
+.main {
+    width: 83%;
+    height: 100%;
+    float: left;
+
+}
+
+.left {
+    width: 15%;
+    background-color: #ebebeb;
+    height: 100%;
+    margin-right: 1%;
+    float: left
+}
+
+.menu {
+    width: 100%;
+    transition: all 0.4s ease;
+    padding: 0;
+    border-bottom: 1px solid #919191;
+}
+
+.menu_title {
+    padding-left: 20px;
+    height: 45px;
+    transition: all 0.4s ease;
+}
+
+.menu_title :first-child {
+    height: 20px;
+    width: 20px;
+    position: relative;
+    bottom: -8px;
+}
+
+.status_img {
+    margin-left: 75%;
+    position: relative;
+    bottom: 10px;
+
+}
+
+.menu_item {
+    display: none;
+}
+
+.item {
+    height: 40px;
+    background: #FFFFFF;
+    margin: 1px;
+    padding-left: 50px;
+    padding-top: 10px;
+}
+
+.item:hover {
+    background: rgba(254, 254, 254, 0.8);
+}
+
+iframe {
+    height: 100%;
+    width: 100%;
+    border: #FFFFFF;
+}
+
+a {
+    position: relative;
+    top: 10px;
+    float: right;
+    padding-right: 20px;
+    font-size: 16px;
+    color: #9d9d9d;
+}
+
+a:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.my_span1 {
+    position: relative;
+    top: 8px;
+    left: 5px
+}

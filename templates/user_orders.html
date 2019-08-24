@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="/static/lib/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/lib/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/user_orders.css">
+    <script src="/static/lib/bootstrap.min.js"></script>
+    <script src="/static/lib/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="/static/fonts/css/font-awesome.min.css">
+    <title>用户订单</title>
+</head>
+<body>
+<div class="container">
+    <h2 class="sub-header">我的订单</h2>
+    <hr style="background-color: #757575;height: 1px">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tab" role="tabpanel">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active" onclick="getOrder1()">
+                        <a href="#Section1" aria-controls="home" role="tab" data-toggle="tab">
+                            <i class="fa fa-align-left"></i><span>已售</span></a>
+                    </li>
+                    <li role="presentation" onclick="getOrder2()">
+                        <a href="#Section2" aria-controls="profile" role="tab" data-toggle="tab">
+                            <i class="fa fa-file-text-o"></i><span>预售</span></a>
+                    </li>
+                    <li role="presentation" onclick="getOrder3()">
+                        <a href="#Section3" aria-controls="messages" role="tab" data-toggle="tab">
+                            <i class="fa fa-bold"></i><span>退货</span></a>
+                    </li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-content tabs">
+                    <div role="tabpanel" class="tab-pane fade in active" id="Section1"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="Section2"></div>
+                    <div role="tabpanel" class="tab-pane fade" id="Section3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 获取cookie
+    function getCookie(cname) {
+        let name = cname + "=";
+        let ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i].trim();
+            if (c.indexOf(name) === 0)
+                return c.substring(name.length, c.length);
+        }
+        return "";
+    }
+
+    let ID = getCookie("CID");
+    let ele = [$("#Section1"), $("#Section2"), $("#Section3")];
+
+    function getOrder1() {
+        $.ajax({
+            url: '/user/getOrder1',
+            type: 'POST',
+            data: {'id': ID},
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data['status'] === 0) {
+                    swal({icon: 'error', text: '请求失败'});
+                    return;
+                }
+                ele[0].empty();
+                let info = data.list;
+                for (let i = 0, l = info.length; i < l; i++) {
+                    let tempEle = '<div class="row">' +
+                        '<div class="col-md-3">' +
+                        '<img src="' + info[i].img + '" style="width:100%"></div>' +
+                        '<div class="col-md-7">' +
+                        '<p>书名：' + info[i].title + '</p>' +
+                        '<p>ISBN：' + info[i].isbn + '</p>' +
+                        '<p>订单号：' + info[i].id_field + '</p>' +
+                        '<p>数目：' + info[i].number_field + '</p>' +
+                        '<p>实际付款：' + info[i].price2 + '</p>' +
+                        '<p>电话：' + info[i].phone + '</p>' +
+                        '<p>收货地址：' + info[i].address + '</p>' +
+                        '<p>时间：' + info[i].time + '</p></div>' +
+                        '<div class="col-md-2">' +
+                        '<button class="btn btn-default" style="position: relative; top: 200px"' + 'onclick="back1(' + info[i].id_field + ')">退货</button>' +
+                        '</div></div><hr class="hr-content">';
+                    ele[0].append(tempEle);
+                }
+            },
+            error: function () {
+                swal({icon: 'error', text: '服务异常'});
+            }
+        });
+    }
+
+    getOrder1();
+
+    function getOrder2() {
+        $.ajax({
+            url: '/user/getOrder2',
+            type: 'POST',
+            data: {'id': ID},
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data['status'] === 0) {
+                    swal({icon: 'error', text: '请求失败'});
+                    return;
+                }
+                ele[1].empty();
+                let info = data.list;
+                for (let i = 0, l = info.length; i < l; i++) {
+                    let t = info[i].finish === 1 ? "已发售" : "尚未发售";
+                    let tempEle = '<div class="row">' +
+                        '<div class="col-md-3">' +
+                        '<img src="' + info[i].img + '" style="width:100%"></div>' +
+                        '<div class="col-md-7">' +
+                        '<p>书名：' + info[i].title + '</p>' +
+                        '<p>ISBN：' + info[i].isbn + '</p>' +
+                        '<p>订单号：' + info[i].id_field + '</p>' +
+                        '<p>数目：' + info[i].number_field + '</p>' +
+                        '<p>实际付款：' + info[i].price2 + '</p>' +
+                        '<p>电话：' + info[i].phone + '</p>' +
+                        '<p>收货地址：' + info[i].address + '</p>' +
+                        '<p>时间：' + info[i].time + '</p>' +
+                        '<p>状态：' + t + '</p></div>' +
+                        '<div class="col-md-2">' +
+                        '<button class="btn btn-default" style="position: relative; top: 200px"' + 'onclick="back2(' + info[i].id_field + ')">退货</button>' +
+                        '</div></div><hr class="hr-content">';
+                    ele[1].append(tempEle);
+                }
+            },
+            error: function () {
+                swal({icon: 'error', text: '服务异常'});
+            }
+        });
+    }
+
+    function getOrder3() {
+        let obj = {'id': ID};
+        $.ajax({
+            url: '/user/getOrder3',
+            type: 'POST',
+            data: obj,
+            success: function (data) {
+                console.log(data);
+                data = JSON.parse(data);
+                if (data['status'] === 0) {
+                    swal({icon: 'error', text: '请求失败'});
+                    return;
+                }
+                ele[2].empty();
+                let info = data.list;
+                for (let i = 0, l = info.length; i < l; i++) {
+                    let t = info[i].finish === 1 ? "已处理" : "正在处理";
+                    let tempEle = '<div class="row">' +
+                        '<div class="col-md-3">' +
+                        '<img src="' + info[i].img + '" style="width: 100%"></div>' +
+                        '<div class="col-md-7">' +
+                        '<p>书名：' + info[i].title + '</p>' +
+                        '<p>ISBN：' + info[i].isbn + '</p>' +
+                        '<p>订单号：' + info[i].id_field + '</p>' +
+                        '<p>数目：' + info[i].number_field + '</p>' +
+                        '<p>时间：' + info[i].time + '</p>' +
+                        '<p>状态：' + t + '</p></div>' +
+                        '</div></div><hr class="hr-content">';
+                    ele[2].append(tempEle);
+                }
+            },
+            error: function () {
+                swal({icon: 'error', text: '服务异常'});
+            }
+        });
+    }
+
+    function back1(sell_id) {
+        let post_data = {'sell_id': sell_id};
+        $.ajax({
+            url: " /user/back_order1",
+            type: "POST",
+            data: post_data,
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data["status"] === 1) {
+                    swal({icon: 'success', text: '提交成功，等待处理'});
+                    window.location.reload();
+                }
+                else
+                    swal({icon: 'error', text: '提交失败'});
+            },
+            error: function () {
+                swal({icon: 'error', text: '服务异常'});
+            }
+        });
+    }
+
+    function back2(pre_sell_id) {
+        let post_data = {
+            'pre_sell_id': pre_sell_id
+        };
+        $.ajax({
+            url: " /user/back_order2",
+            type: "POST",
+            data: post_data,
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data["status"] === 1) {
+                    swal({icon: 'success', text: '提交成功，等待处理'});
+                    window.location.reload();
+                }
+                else
+                    swal({icon: 'error', text: '提交失败'});
+            },
+            error: function () {
+                swal({icon: 'error', text: '服务异常'});
+            }
+        });
+    }
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+.panel {
+    box-shadow: rgb(167, 214, 207) 0 0 18px;
+    transition: 0.3s ease;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    /*background: #effdfb;*/
+}
+
+a, a:hover {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#keyword {
+    margin-left: 5%;
+    margin-top: 3%;
+    width: 730px;
+    height: 50px;
+    float: left;
+    border-radius: 5px 0 0 5px
+}
+
+#search {
+    margin-top: 3%;
+    height: 50px;
+    float: left;
+    width: 150px;
+    background: #cf202c;
+    border-radius: 0 5px 5px 0
+}
+
+.kind {
+    text-align: center;
+    line-height: 40px;
+    font-size: 17px;
+    color: #ffffff;
+    border-radius: 2px;
+}
+
+.kind:hover {
+    background: #4b4e9c;
+    cursor: pointer;
+    transition: 0.2s ease all;
+}
+
+#c_name {
+    position: absolute;
+    top: 50px;
+    right: 140px
+}
+
+#quit {
+    position: absolute;
+    top: 50px;
+    right: 84px
+}

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>退货信息查询</title>
+    <script src="/static/lib/jquery.min.js"></script>
+    <script src="/static/lib/bootstrap.min.js"></script>
+    <script src="/static/js/frame5.js"></script>
+    <script src="/static/lib/sweetalert.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/lib/bootstrap.min.css"/>
+</head>
+<body>
+<!--搜索退货-->
+<div id="search" class="form-inline" style="margin: 10px;">
+    <div class="form-group">
+        <input type="text" class="form-control" id="search_id" placeholder="ID号">
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control" id="search_isbn" placeholder="ISBN">
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control" id="search_name" placeholder="用户ID">
+    </div>
+    <div class="form-group">
+        <select class="form-control" id="search_finish" style="width: 180px;" title="状态">
+            <option value="">所有</option>
+            <option value="1">已处理</option>
+            <option value="0">待处理</option>
+        </select>
+    </div>
+    <button id="change_submit" type="button" class="btn btn-primary" onclick="search_submit()">查询</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">添加</button>
+</div>
+<!--增加退货的模态框-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">创建订单</h4>
+            </div>
+            <div class="modal-body">
+                <div id="add">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="add_isbn" placeholder="ISBN">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="add_customer" placeholder="用户ID">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="add_number" placeholder="数目">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="add_money" placeholder="退款">
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" id="add_finish" title="状态">
+                            <option value="1">已处理</option>
+                            <option value="0">待处理</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="add_no()" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="add_submit()">增加</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--修改退货的模态框-->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">修改信息</h4>
+            </div>
+            <div class="modal-body">
+                <div id="change">
+                    <div class="form-group">
+                        <label for="change_id">ID</label>
+                        <input type="text" class="form-control" id="change_id" placeholder="id" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="change_name">ISBN</label>
+                        <input type="text" class="form-control" id="change_isbn" placeholder="书籍ISBN">
+                    </div>
+                    <div class="form-group">
+                        <label for="change_customer">用户ID</label>
+                        <input type="text" class="form-control" id="change_customer" placeholder="用户ID">
+                    </div>
+                    <div class="form-group">
+                        <label for="change_number">数目</label>
+                        <input type="text" class="form-control" id="change_number" placeholder="数目">
+                    </div>
+                    <div class="form-group">
+                        <label for="change_money">退款</label>
+                        <input type="text" class="form-control" id="change_money" placeholder="退款">
+                    </div>
+                    <div class="form-group">
+                        <label for="change_finish">状态</label>
+                        <select class="form-control" id="change_finish" title="状态">
+                            <option value="1">已处理</option>
+                            <option value="0">待处理</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="change_submit()">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--退货-->
+<h2 class="sub-header">Returns List</h2>
+<table class="table table-hover table-bordered">
+    <tr>
+        <td style="width: 14.3%">ID</td>
+        <td style="width: 14.3%">ISBN</td>
+        <td style="width: 14.3%">用户ID</td>
+        <td style="width: 14.3%">数目</td>
+        <td style="width: 14.3%">退款</td>
+        <td style="width: 14.3%">状态</td>
+        <td style="width: 14.3%">操作</td>
+    </tr>
+    {% for back in back_list %}
+        <tr>
+            <td>{{ back.id_field }}</td>
+            <td>{{ back.isbn }}</td>
+            <td>{{ back.customer }}</td>
+            <td>{{ back.number_field }}</td>
+            <td>{{ back.money }}</td>
+            {% if back.finish == 1 %}
+                <td>已处理</td>
+            {% else %}
+                <td>待处理</td>
+            {% endif %}
+            <td>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal2"
+                        onclick="change_back('{{ back.id_field }}','{{ back.isbn }}','{{ back.customer }}','{{ back.number_field }}','{{ back.money }}','{{ back.finish }}')">
+                    修改
+                </button>
+                <button class="btn btn-danger" onclick="del_back('{{ back.id_field }}')">删除</button>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+</body>
+</html>

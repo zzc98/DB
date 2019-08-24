@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>表</title>
+    <script type="text/javascript" src="/static/lib/echarts.js" charset="UTF-8"></script>
+</head>
+
+<body>
+<div id="chart1" style="float:left; width:60%; height:600px;"></div>
+<div id="chart2" style=" float:left;width:40%; height:600px;"></div>
+
+<script type="text/javascript" charset="UTF-8">
+    // line
+    let dom1 = document.getElementById("chart1");
+    let myChart1 = echarts.init(dom1);
+    let option1 = {
+        title: {text: '趋势'},
+        tooltip: {trigger: 'axis'},
+        legend: {data: [{% for i in pie.value %}'{{ i }}',{% endfor %}]},
+        toolbox: {
+            show: true,
+            feature: {
+                mark: {show: true},
+                magicType: {show: true, type: ['line', 'bar']},
+                restore: {show: true},
+            }
+        },
+        calculable: true,
+        xAxis: [{
+            type: 'category',
+            boundaryGap: false,
+            data: [{% for i in line.title %}'{{ i }}',{% endfor %}]
+        }],
+        yAxis: [{
+            type: 'value',
+            axisLabel: {
+                formatter: '{value}'
+            }
+        }],
+        series: [
+            {% for kind in pie.value %}
+                {
+                    name: '{{ kind }}', type: 'line', data: [
+                        {% for month in line.months %}
+                            {% for k,v in month.items %}
+                                {% if k == kind %}
+                                    {{ v }} ,
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    ]
+                },
+            {% endfor %}
+        ]
+    };
+
+    // pie
+    let dom2 = document.getElementById("chart2");
+    let myChart2 = echarts.init(dom2);
+    let option2 = {
+        title: {text: '各类占比',},
+        tooltip: {trigger: 'item', formatter: "{b}: {c} ({d}%)"},
+        legend: {
+            orient: 'vertical',
+            x: 'right',
+            data: [{% for i in pie.value %}'{{ i }}',{% endfor %}]
+        },
+        series: [{
+            name: '数据',
+            type: 'pie',
+            radius: ['50%', '70%'],
+            avoidLabelOverlap: false,
+            label: {
+                normal: {
+                    show: true,
+                    position: 'center',
+                    formatter: function () {
+                        return {{ pie.total }};
+                    },
+                    textStyle: {
+                        fontSize: 40,
+                        color: 'green'
+                    }
+                },
+                emphasis: {
+                    show: false,
+                    textStyle: {
+                        fontSize: '30',
+                        fontWeight: 'bold'
+                    }
+                }
+            },
+            labelLine: {
+                normal: {
+                    show: false
+                }
+            },
+            data: [{% for i, j in pie.value.items %}{ name: '{{i}}' , value: {{j}} },{% endfor %}]
+        }]
+    };
+    if (option2 && typeof option2 === "object")
+        myChart2.setOption(option2, true);
+    if (option1 && typeof option1 === "object")
+        myChart1.setOption(option1, true);
+
+
+</script>
+</body>
+</html>

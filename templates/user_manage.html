@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="/static/lib/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/lib/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/user_manage.css">
+    <script src="/static/lib/bootstrap.min.js"></script>
+    <title>用户管理</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row" style="height:100%">
+        <div class="col-md-2 left">
+            <div style="text-align: center">
+                <img src="/static/img/box.png" alt="盒子">
+            </div>
+            <div class="menu">
+                <div class="menu_title" id="menu1">
+                    <img src="/static/img/menu_person.png" alt="菜单项—个人">
+                    <span class="my_span1">个人信息</span>
+                    <img src="/static/img/hide2.png" class="status_img" alt="状态">
+                </div>
+                <div class="menu_item" id="wrap1">
+                    <div class="item" id="frame1_1">编辑个人信息</div>
+                </div>
+            </div>
+            <div class="menu">
+                <div class="menu_title" id="menu2">
+                    <img src="/static/img/menu_order.png" alt="菜单项—订单">
+                    <span class="my_span1">我的订单</span>
+                    <img src="/static/img/hide2.png" class="status_img" alt="状态">
+                </div>
+                <div class="menu_item" id="wrap2">
+                    <div class="item" id="frame2_1">查看订单</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10 right" style="height: 100%;">
+            <iframe id="frameContent"></iframe>
+        </div>
+    </div>
+</div>
+</body>
+
+<script>
+    $(function () {
+        $(".menu").click(function () {
+            let menu_title = $(this).children(".menu_title");
+            let wrap = $(this).children(".menu_item");
+            menu_title.click(function (event) {
+                event.stopPropagation();
+                let status_img = menu_title.children(".status_img");
+                wrap.slideToggle("slow");
+                if (status_img.attr("src") === "/static/img/hide2.png")
+                    status_img.attr("src", "/static/img/show2.png");
+                else
+                    status_img.attr("src", "/static/img/show2.png");
+            });
+        });
+        let frameContent = $("#frameContent");
+        let item = $(".item");
+        let frames = ['user_person.html', 'user_orders.html'];
+        item.click(function (event) {
+            event.stopPropagation();
+            frameContent.attr("src", frames[item.index(this)]);
+            item.removeClass("item_active");
+            $(this).addClass("item_active");
+        });
+    });
+</script>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <script src="/static/lib/jquery.min.js"></script>
+    <script src="/static/lib/bootstrap.min.js"></script>
+    <script src="/static/lib/sweetalert.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/lib/bootstrap.min.css"/>
+    <style>
+        body {
+            background-image: url("/static/img/login_manager_bg.jpg");
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            background-attachment: fixed;
+        }
+
+        #content {
+            width: 300px;
+            height: 500px;
+            position: relative;
+            top: 200px;
+            left: 65%;
+            padding: 50px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 5px;
+        }
+
+        #login {
+            position: relative;
+            left: 10%;
+            margin: 21px;
+        }
+
+        #submit {
+            width: 200px
+        }
+    </style>
+</head>
+<body>
+<div id="content">
+    <img src="/static/img/管理员登录.png" id="login">
+    <div id="main">
+        <div class="form-group">
+            <input class="form-control" type="text" id="id" placeholder="管理员ID">
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="password" id="password" placeholder="密码">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-success" id="submit">提交</button>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#submit").click(function () {
+            let post_data = {
+                "id": $("#id").val(),
+                "password": $("#password").val(),
+            };
+            $.ajax({
+                url: " /manager/valid",
+                type: "POST",
+                data: post_data,
+                success: function (data) {
+                    data = JSON.parse(data);
+                    if (data["status"] === 1) {
+                        window.location.href = '/manager/index';
+                    } else {
+                        swal({icon: 'error', text: '没有该管理员'});
+                    }
+                },
+                error: function () {
+                    swal({icon: 'error', text: '服务异常'});
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

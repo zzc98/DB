@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>销售信息查询</title>
+    <script src="/static/lib/jquery.min.js"></script>
+    <script src="/static/lib/bootstrap.min.js"></script>
+    <script src="/static/js/frame3.js"></script>
+    <script src="/static/lib/sweetalert.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/lib/bootstrap.min.css"/>
+</head>
+<body>
+<!--搜索销售订单-->
+<div id="search" class="form-inline" style="margin: 10px;">
+    <div class="form-group">
+        <input type="text" class="form-control" id="search_id" placeholder="ID号">
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control" id="search_isbn" placeholder="ISBN">
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control" id="search_name" placeholder="用户ID">
+    </div>
+    <button id="change_submit" type="button" class="btn btn-primary" onclick="search_submit()">查询</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">添加</button>
+</div>
+<!--增加销售的模态框-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">创建订单</h4>
+            </div>
+            <div class="modal-body">
+                <div id="add">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="add_isbn" placeholder="ISBN" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="add_customer" placeholder="用户ID" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="add_number" placeholder="数目" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="add_price1" placeholder="原价">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="add_price2" placeholder="实际">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="add_phone" placeholder="电话" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="add_address" placeholder="地址">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="add_no()" data-dismiss="modal">取消
+                </button>
+                <button type="button" class="btn btn-primary" onclick="add_submit1()">增加
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--修改销售的模态框-->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">修改信息</h4>
+            </div>
+            <div class="modal-body">
+                <div id="change">
+                    <div class="form-group">
+                        <label for="change_id">ID</label>
+                        <input type="text" class="form-control" id="change_id" placeholder="id" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="change_name">ISBN</label>
+                        <input type="text" class="form-control" id="change_isbn" placeholder="书籍ISBN">
+                    </div>
+                    <div class="form-group">
+                        <label for="change_customer">用户ID</label>
+                        <input type="text" class="form-control" id="change_customer" placeholder="用户ID">
+                    </div>
+                    <div class="form-group">
+                        <label for="change_number">数目</label>
+                        <input type="text" class="form-control" id="change_number" placeholder="数目">
+                    </div>
+                    <div class="form-group">
+                        <label for="change_price1">原价</label>
+                        <input type="text" class="form-control" id="change_price1" placeholder="原价">
+                    </div>
+                    <div class="form-group">
+                        <label for="change_price2">实际</label>
+                        <input type="text" class="form-control" id="change_price2" placeholder="实际">
+                    </div>
+                    <div class="form-group">
+                        <label for="change_address">地址</label>
+                        <input type="text" class="form-control" id="change_address" placeholder="地址">
+                    </div>
+                    <div class="form-group">
+                        <label for="change_phone">电话</label>
+                        <input type="text" class="form-control" id="change_phone" placeholder="电话">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="change_submit()">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--销售-->
+<h2 class="sub-header">Sell List</h2>
+<table class="table table-hover table-bordered">
+    <tr>
+        <td style="width: 11%">ID</td>
+        <td style="width: 11%">ISBN</td>
+        <td style="width: 11%">用户ID</td>
+        <td style="width: 11%">数目</td>
+        <td style="width: 11%">原价</td>
+        <td style="width: 11%">实际</td>
+        <td style="width: 11%">地址</td>
+        <td style="width: 11%">电话</td>
+        <td style="width: 11%">操作</td>
+    </tr>
+    {% for sell in sell_list %}
+        <tr>
+            <td>{{ sell.id_field }}</td>
+            <td>{{ sell.isbn }}</td>
+            <td>{{ sell.customer }}</td>
+            <td>{{ sell.number_field }}</td>
+            <td>{{ sell.price1 }}</td>
+            <td>{{ sell.price2 }}</td>
+            <td>{{ sell.address }}</td>
+            <td>{{ sell.phone }}</td>
+            <td>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal2"
+                        onclick="change_sell('{{ sell.id_field }}','{{ sell.isbn }}','{{ sell.customer }}','{{ sell.number_field }}','{{ sell.price1 }}','{{ sell.price2 }}','{{ sell.address }}','{{ sell.phone }}')">
+                    修改
+                    </button>
+                        <button class="btn btn-danger " onclick="del_sell('{{ sell.id_field }}')">删除</button>
+            </td>
+        </tr>
+    {% endfor %}
+
+</table>
+
+</body>
+
+<script>
+   function add_submit1() {
+    let post_data = {
+        "isbn": $('#add_isbn').val(),
+        "customer": $('#add_customer').val(),
+        "number": $('#add_number').val(),
+        "price1": $('#add_price1').val(),
+        "price2": $('#add_price2').val(),
+        "phone": $('#add_phone').val(),
+        "address": $('#add_address').val(),
+    };
+    $.ajax({
+        url: " /manager/add_sell",
+        type: "POST",
+        data: post_data,
+        success: function (data) {
+            data = JSON.parse(data);
+            if (data["status"] == 1) {
+                alert('添加成功，ID号是' + data['id']);
+                location.reload();
+                $('#add_isbn').val("");
+                $('#add_customer').val("");
+                $('#add_number').val("");
+                $('#add_price1').val("");
+                $('#add_price2').val("");
+                $('#add_address').val("");
+                $('#add_phone').val("");
+            }
+            else
+                alert("添加失败");
+        }
+    });
+}
+</script>
+</html>

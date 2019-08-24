@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>网上书店</title>
+    <script src="/static/lib/jquery.min.js"></script>
+    <script src="/static/lib/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/lib/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/user.css"/>
+    <script src="/static/lib/sweetalert.min.js"></script>
+</head>
+
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+            <img src="/static/img/Snipaste2.png">
+        </div>
+        <div class="col-md-10">
+            <input type="text" class="form-control" id="keyword" placeholder="请输入关键字">
+            <button class="btn btn-danger" id="search" onclick="searchByKey()">搜索</button>
+        </div>
+    </div>
+</div>
+<a id="c_name" href="/user/goto_userManage" target="_blank"></a>
+<a id="quit" href="/user/login" onclick="quit()">退出</a>
+
+<div style="height: 40px; background: #2b7cbd">
+    <div class="container">
+        <div class="row">
+            {% for kind in kind_list %}
+                <div class="col-lg-1 kind" onclick="searchByKind({{ kind.kind_id }})">{{ kind.kind_name }}</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div style="width:100%">
+    <div class="container">
+        <div class="row">
+            {% for book in book_list %}
+                <div class="col-lg-4" style="margin-top: 20px">
+                    <div class="c" onclick="buy_book('{{ book.isbn }}')">
+                        <div style="width: 50%; float: left;">
+                            <img src="{{ book.img }}" style="width:100%">
+                        </div>
+                        <div style="width: 50%; float: left; padding-left: 10px">
+                            <span class="book_title">{{ book.title }}</span>
+                            <br>
+                            <span class="book_author">{{ book.author }}</span>
+                            <br><br>
+                            {% autoescape off %}
+                                {{ book.des|truncatechars_html:50 }}...
+                            {% endautoescape %}
+                            <br><br>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<img class="my_footer" id="gotoTop" src="/static/img/火箭.png" alt="回到顶部">
+
+<script>
+    //回到顶部
+    function gotoTop(minHeight) {
+        $("#gotoTop").click(
+            function () {
+                $('html,body').animate({scrollTop: '0px'}, 'slow');
+            });
+        minHeight ? minHeight = minHeight : minHeight = 600;
+        $(window).scroll(function () {
+            let s = $(window).scrollTop();
+            if (s > minHeight)
+                $("#gotoTop").fadeIn(500);
+            else
+                $("#gotoTop").fadeOut(500);
+
+        });
+    }
+
+    //通过关键词查询书籍
+    function searchByKey() {
+        window.location.href = '/user/searchBookByKey?key=' + $("#keyword").val();
+    }
+
+    //通过类别查询书籍
+    function searchByKind(kind_id) {
+        window.location.href = '/user/searchBookByKind?kind=' + kind_id;
+    }
+
+    //得到cookie
+    function getCookie(cname) {
+        let name = cname + "=";
+        let ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i].trim();
+            if (c.indexOf(name) === 0)
+                return c.substring(name.length, c.length);
+        }
+        return "";
+    }
+
+    //初始化加载信息
+    function init() {
+        $.ajax({
+            url: '/user/getNameByID',
+            type: 'POST',
+            data: {'id': getCookie('CID')},
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data['status'] === 1)
+                    $("#c_name").text('欢迎您 ' + data['name']);
+            },
+            error:function(){
+                swal({icon: 'error', text: '服务异常'});
+            }
+        });
+        gotoTop();
+    }
+
+    //购买书籍跳转路由
+    function buy_book(isbn) {
+        window.open("/user/go_buy_book?isbn=" + isbn);
+    }
+
+    //退出时清除cookie
+    function quit() {
+        document.cookie = "CID=''";
+    }
+
+    init();
+
+</script>
+</body>
+</html>

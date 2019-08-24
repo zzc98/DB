@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="/static/lib/jquery.min.js"></script>
+    <link rel="stylesheet" href="/static/lib/bootstrap.min.css">
+    <script src="/static/lib/bootstrap.min.js"></script>
+    <script src="/static/lib/sweetalert.min.js"></script>
+    <title>个人信息</title>
+    <style>
+        body {
+            background: #eff0f5;
+        }
+
+        hr {
+            background-color: #757575;
+            height: 1px
+        }
+
+        .panel {
+            box-shadow: rgb(167, 214, 207) 0 0 18px;
+            transition: 0.3s ease;
+        }
+
+        #showPortrait {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h2 class="sub-header">个人资料</h2>
+    <hr>
+    <div class="row">
+        <div class="col-md-2" style="text-align: center">
+            <img src="/static/img/profile.png" id="showPortrait" alt="头像">
+            <button class="btn btn-link" id="change_pic"></button>
+        </div>
+        <div class="col-md-10">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    姓名：<span id="name"></span>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    ID：<span id="cid"></span>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    积分：<span id="credit"></span>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    电话：<span id="phone"></span>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    性别：<span id="gender"></span>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    生日：<span id="birthday"></span>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    地址：<span id="address"></span>
+                </div>
+            </div>
+            <div>
+                <button class="btn btn-link" data-toggle="modal" data-target="#change_info_modal" id="change_data_btn"
+                        onclick="changeData()">
+                    修改资料
+                </button>
+                <button class="btn btn-link" data-toggle="modal" data-target="#change_pwd_modal" onclick="c()">
+                    修改密码
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--修改个人信息模态框-->
+<div class="modal fade" id="change_info_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">修改资料</h4>
+            </div>
+            <div class="modal-body">
+                <div id="change">
+                    <form id="my_form1" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="change_name">您的姓名</label>
+                            <input type="text" class="form-control" id="change_name" placeholder="姓名">
+                        </div>
+                        <div class="form-group">
+                            <label for="change_phone">您的电话</label>
+                            <input type="text" class="form-control" id="change_phone">
+                        </div>
+                        <div class="form-group">
+                            <label for="change_gender">您的性别</label>
+                            <select class="form-control" id="change_gender">
+                                <option value="男">男</option>
+                                <option value="女">女</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="change_major">请输入生日</label>
+                            <input type="date" class="form-control" id="change_birthday" placeholder="生日">
+                        </div>
+                        <div class="form-group">
+                            <label for="change_address">您的地址</label>
+                            <input type="text" class="form-control" id="change_address" placeholder="地址">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="change_data_submit" onclick="changeSubmit()">修改
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--修改密码模态框-->
+<div class="modal fade" id="change_pwd_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">修改密码</h4>
+            </div>
+            <div class="modal-body">
+                <div id="change_pwd">
+                    <form id="my_form2" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="change_pwd1">原始密码</label>
+                            <input type="password" class="form-control" id="change_pwd1">
+                        </div>
+                        <div class="form-group">
+                            <label for="change_pwd2">新密码</label>
+                            <input type="password" class="form-control" id="change_pwd2">
+                        </div>
+                        <div class="form-group">
+                            <label for="change_pwd3">再次输入密码</label>
+                            <input type="password" class="form-control" id="change_pwd3">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="change_pwd_submit" onclick="changePassword()">修改
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 获取cookie
+    function getCookie(cname) {
+        let name = cname + "=";
+        let ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i].trim();
+            if (c.indexOf(name) === 0)
+                return c.substring(name.length, c.length);
+        }
+        return "";
+    }
+
+    let ID = getCookie("CID");
+    let name = $("#name");
+    let id = $("#cid");
+    let credit = $("#credit");
+    let phone = $("#phone");
+    let gender = $("#gender");
+    let birthday = $("#birthday");
+    let address = $("#address");
+    let pwd;
+
+
+    let change_name = $("#change_name");
+    let change_phone = $("#change_phone");
+    let change_gender = $("#change_gender");
+    let change_birthday = $("#change_birthday");
+    let change_address = $("#change_address");
+
+
+    //加载数据
+    function getData() {  //从后台得到数据并显示
+        let obj = {"id": ID};
+        $.ajax({
+            url: "/user/getInfo",
+            type: "POST",
+            data: obj,
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data.status === 1) {
+                    id.text(ID);
+                    name.text(data.name);
+                    credit.text(data.credit);
+                    phone.text(data.phone);
+                    gender.text(data.gender);
+                    birthday.text(data.birthday);
+                    address.text(data.address);
+                    pwd = data.password;
+                } else {
+                    swal({icon: "error", title: "获取个人信息失败",});
+                }
+            },
+            error: function () {
+                swal({icon: "error", title: "服务异常",});
+            }
+        });
+    }
+
+    getData();
+
+    //触发修改信息模态框
+    function changeData() { //触发修改信息
+        change_name.val(name.text());
+        change_phone.val(phone.text());
+        change_birthday.val(birthday.text());
+        change_address.val(address.text());
+        $.each($("#change_gender > option"), function (index, value) {
+            if (value.innerText.indexOf(gender.text()) >= 0)
+                change_gender.val(value.innerText);
+        });
+    }
+
+    //修改信息提交
+    function changeSubmit() {
+        let obj = {
+            'id': ID,
+            'name': change_name.val(),
+            'phone': change_phone.val(),
+            'birthday': change_birthday.val(),
+            'address': change_address.val(),
+            'sex': change_gender.val(),
+        };
+        $.ajax({
+            url: "/user/change_info",
+            type: "POST",
+            data: obj,
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data["status"] === 1) {
+                    swal({icon: "success", title: "修改信息成功"});
+                    setTimeout(function () {
+                        $('#change_info_modal').modal('hide');
+                        getData();
+                    }, 3000);
+                } else {
+                    swal({icon: "error", title: "修改信息失败"});
+                }
+            },
+            error: function () {
+                swal({icon: "error", title: "服务异常"});
+            }
+        });
+    }
+
+    //清空密码框
+    function c() {
+        $("#change_pwd1").val("");
+        $("#change_pwd2").val("");
+        $("#change_pwd3").val("");
+    }
+
+    //修改密码提交
+    function changePassword() {
+        let pwd1 = $("#change_pwd1").val();
+        let pwd2 = $("#change_pwd2").val();
+        let pwd3 = $("#change_pwd3").val();
+        if (pwd1.length === 0 || pwd2.length === 0 || pwd3.length === 0) {
+            swal({icon: "error", title: "请输入完整信息密码"});
+            return;
+        }
+        if (pwd2 !== pwd3) {
+            swal({icon: "error", title: '两次输入的密码不一致'});
+            return;
+        }
+        if (pwd !== pwd1) {
+            swal({icon: "error", title: "原始密码输入错误"});
+            return;
+        }
+        let obj = {"id": ID, "password": pwd2,};
+        $.ajax({
+            url: "/user/change_pwd",
+            type: "POST",
+            data: obj,
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data["status"] === 1) {
+                    swal({icon: "success", title: "修改密码成功"});
+                    setTimeout(function () {
+                        $('#change_pwd_modal').modal('hide');
+                    }, 3000);
+                } else {
+                    swal({icon: "error", title: "修改密码失败"});
+                }
+            },
+            error: function () {
+                swal({icon: "error", title: "服务异常"});
+            }
+        });
+    }
+</script>
+</body>
+</html>

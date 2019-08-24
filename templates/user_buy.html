@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>购买页</title>
+    <script src="/static/lib/jquery.min.js"></script>
+    <script src="/static/lib/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/lib/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/user_buy.css"/>
+    <script src="/static/lib/sweetalert.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+            <img src="/static/img/Snipaste2.png">
+        </div>
+        <div class="col-md-10">
+            <input type="text" class="form-control" id="keyword" placeholder="请输入关键字">
+            <button class="btn btn-danger" id="search" onclick="searchByKey()">搜索</button>
+        </div>
+    </div>
+</div>
+
+<div style="height: 40px; background: #2b7cbd">
+    <div class="container">
+        <div class="row">
+            {% for kind in kind_list %}
+                <div class="col-lg-1 kind" onclick="searchByKind({{ kind.kind_id }})">{{ kind.kind_name }}</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h2 class="sub-header">书籍详情</h2>
+    <hr>
+    <div class="row">
+        <div class="col-lg-2">
+            <img src="{{ book.img }}" style="margin-right: 5px;width:100%">
+        </div>
+        <div class="col-lg-10">
+            <div class="panel panel-default">
+                <div class="panel-body">书名：{{ book.title }}</div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">ISBN：{{ book.isbn }}</div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">价格：￥{{ book.price }}元</div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">作者：{{ book.author }}</div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">状态：{% if book.on_sale == 1 %}销售中 库存:{{ book.number_field }}{% else %}
+                    预售中{% endif %}</div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-body">{{ book.des }}</div>
+            </div>
+            <button class="btn btn-link" data-toggle="modal" data-target="#modal">
+                点击购买
+            </button>
+        </div>
+    </div>
+</div>
+
+<!--模态框-->
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">填写订单</h4>
+            </div>
+            <div class="modal-body">
+                <div id="change_pwd">
+                    <form enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="address">收货地址</label>
+                            <input type="text" class="form-control" id="address" placeholder="请输入收货地址">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">联系电话</label>
+                            <input type="text" class="form-control" id="phone" placeholder="请输入联系电话"
+                                   onkeyup="this.value=this.value.replace(/\D/g,'')">
+                        </div>
+                        <div class="form-group">
+                            <label for="number">购买数量</label>
+                            <input type="text" class="form-control" id="number" value="1" onchange="change_number()"
+                                   onkeyup="this.value=this.value.replace(/\D/g,'')">
+                        </div>
+                        <div class="form-group">
+                            <label>付款</label>
+                            <p>
+                                <del id="should"></del>
+                            </p>
+                            <p id="real"></p>
+                        </div>
+                        <img src="/static/img/tmp_code.png" width="250" style="margin-left: 120px">
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="change_pwd_submit" onclick="buyBook()">提交
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script>
+    function getCookie(cname) {
+        let name = cname + "=";
+        let ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i].trim();
+            if (c.indexOf(name) === 0)
+                return c.substring(name.length, c.length);
+        }
+        return "";
+    }
+
+    let nEle = $("#number");
+    let id = getCookie('CID');
+    let credit = 0;
+
+    function change_number() {
+        let n = nEle.val();
+        let p = 0;
+        {% if book.price %}
+            p = {{ book.price }};
+        {% endif %}
+        let credit = 0;
+        {% if credit %}
+            credit = {{ credit }};
+        {% endif %}
+        let m1 = n * p;
+        $("#should").text('原价：￥' + m1.toFixed(2));
+        let m2 = m1 - 5 * Math.floor(credit / 50);
+        if (m2 < 0)
+            m2 = 0;
+        $("#real").text('实际：￥' + m2.toFixed(2));
+    }
+
+    function init() {
+        $.ajax({
+            url: '/user/getNameByID',
+            type: 'POST',
+            data: {'id': getCookie('CID')},
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data['status'] === 1)
+                    $("#c_name").text('欢迎您 ' + data['name']);
+            },
+            error: function () {
+                swal({icon: 'error', text: '服务异常'});
+            }
+        });
+        $.ajax({
+            url: "/user/getCreditByID",
+            type: "POST",
+            data: {'id': id},
+            async: false,
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data["status"] === 1) {
+                    credit = data["credit"];
+                }
+            },
+            error: function () {
+                swal({icon: 'error', text: '服务异常'});
+            }
+        });
+        change_number();
+    }
+
+    function buyBook() {
+        let n = nEle.val();
+        let p = 0;
+        {% if book.price %}
+            p = {{ book.price }};
+        {% endif %}
+        let m1 = n * p;
+        let m2 = m1 - 5 * Math.floor(credit / 50);
+        if (m2 < 0)
+            m2 = 0;
+        let post_data = {
+            "isbn": "{{ book.isbn }}",
+            "customer": id,
+            'number': nEle.val(),
+            'price1': m1,
+            'price2': m2,
+            'address': $("#address").val(),
+            'phone': $("#phone").val(),
+            'status': "{{ book.on_sale }}"
+        };
+        $.ajax({
+            url: "/user/buy_book",
+            type: "POST",
+            data: post_data,
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data["status"] === 1) {
+                    swal({icon: 'success', text: '购买成功'});
+                    window.location.reload();
+                }
+                else
+                    swal({icon: 'error', text: '购买失败'});
+            },
+            error: function () {
+                swal({icon: 'error', text: '服务异常'});
+            }
+        });
+    }
+
+    init();
+
+</script>
+</html>

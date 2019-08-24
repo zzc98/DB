@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据库课程设计</title>
+    <script src="/static/lib/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/lib/bootstrap.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css"/>
+</head>
+<body>
+<div id="top">
+    <img src="/static/img/网上书店.png">
+</div>
+<div id="content">
+    <div id="left">
+        <div class="login">
+            <img src="/static/img/用户.png">
+            <button class="btn btn-primary" id="user">用户</button>
+        </div>
+    </div>
+    <div id="right">
+        <div class="login">
+            <img src="/static/img/管理员.png">
+            <button class="btn btn-success" id="admin">管理者</button>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    $(function () {
+        $("#user").click(function () {
+            window.location.href = '/user/login';
+        });
+        $("#admin").click(function () {
+            window.location.href = '/manager/login';
+        });
+    });
+</script>
+</html>

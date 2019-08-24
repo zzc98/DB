@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户登录</title>
+    <link href="/static/lib/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/fonts/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/static/css/htmleaf-demo.css" rel="stylesheet">
+    <link href="/static/css/login.css" rel="stylesheet">
+    <script src="/static/lib/jquery.min.js"></script>
+    <script src="/static/lib/sweetalert.min.js"></script>
+</head>
+<body>
+<div class="htmleaf-container" id="login_widget">
+    <header class="htmleaf-header">
+        <h1>用户登录</h1>
+    </header>
+    <div class="demo form-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-offset-3 col-md-6">
+                    <div class="form-horizontal">
+                        <span class="heading">用户登录</span>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="login_id" placeholder="用户ID">
+                            <i class="fa fa-user"></i>
+                        </div>
+                        <div class="form-group help">
+                            <input type="password" class="form-control" id="login_password" placeholder="密码">
+                            <i class="fa fa-lock"></i>
+                            <a href="#" class="fa fa-question-circle"></a>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-default" onclick="login()">立刻登录</button>
+                            <button class="btn btn-default" onclick="showRegister()">没有账号？</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="htmleaf-container" id="register_widget">
+    <header class="htmleaf-header">
+        <h1>用户注册</h1>
+    </header>
+    <div class="demo form-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-offset-3 col-md-6">
+                    <div class="form-horizontal">
+                        <span class="heading">用户注册</span>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="register_name" placeholder="用户名">
+                            <i class="fa fa-user"></i>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" id="register_password" placeholder="密码">
+                            <i class="fa fa-lock"></i>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" id="register_password2" placeholder="再次输入密码">
+                            <i class="fa fa-lock"></i>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="register_phone" placeholder="手机号">
+                            <i class="fa fa-phone"></i>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="register_address" placeholder="地址">
+                            <i class="fa fa-home"></i>
+                        </div>
+                        <div class="form-group">
+                            <input type="date" class="form-control" id="register_birthday" placeholder="生日">
+                            <i class="fa fa-birthday-cake"></i>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="register_sex" title="性别">
+                                <option value="">性别</option>
+                                <option value="男">男</option>
+                                <option value="女">女</option>
+                            </select>
+                            <i class="fa fa-venus-mars"></i>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-default" onclick="register()">点我注册</button>
+                            <button class="btn btn-default" onclick="showLogin()">已有账号</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    let login_component = $("#login_widget");
+    let register_component = $("#register_widget");
+    register_component.hide();
+
+    //展示登录组件
+    function showLogin() {
+        register_component.hide();
+        login_component.show();
+    }
+
+    //展示注册组件
+    function showRegister() {
+        login_component.hide();
+        register_component.show();
+    }
+
+    //登录事件
+    function login() {
+        let id = $("#login_id").val();
+        let password = $("#login_password").val();
+        if (id.length === 0 || password.length === 0) {
+            swal({
+                text: "请填写用户ID及密码",
+                icon: "error",
+            });
+            return;
+        }
+        let post_data = {"id": id, "password": password};
+        $.ajax({
+            url: " /user/valid",
+            type: "POST",
+            data: post_data,
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data["status"] === 1) {
+                    swal({
+                        text: "登录成功",
+                        icon: "success",
+                    }).then(() => {
+                        document.cookie = "CID=" + id;
+                        window.location.href = '/user/index';
+                    });
+
+                } else {
+                    swal({
+                        text: "用户名或密码错误",
+                        icon: "error",
+                    });
+                }
+            },
+            error: function () {
+                swal({
+                    text: "服务异常",
+                    icon: "error",
+                });
+            }
+        });
+    }
+
+    //注册事件
+    function register() {
+        let name = $("#register_name").val();
+        let password = $("#register_password").val();
+        let password2 = $("#register_password2").val();
+        let phone = $("#register_phone").val();
+        let address = $("#register_address").val();
+        let sex = $("#register_sex").val();
+        let birthday = $("#register_birthday").val();
+        if (name.length === 0 || password.length === 0 || password2.length === 0 || phone.length === 0 ||
+            address.length === 0 || sex.length === 0 || birthday.length === 0) {
+            swal({
+                text: "请填写完整信息",
+                icon: "error",
+            });
+            return;
+        }
+        if (password !== password2) {
+            swal({
+                text: "两次输入的密码不一致",
+                icon: "error",
+            });
+            return;
+        }
+        let post_data = {
+            "name": name,
+            "password": password,
+            "phone": phone,
+            "address": address,
+            "sex": sex,
+            "birthday": birthday
+        };
+        $.ajax({
+            url: " /user/register",
+            type: "POST",
+            data: post_data,
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data["status"] === 1) {
+                    swal({
+                        text: '注册成功，您的用户ID为' + data['id'],
+                        icon: "success",
+                    });
+                    window.location.reload();
+                } else {
+                    swal({
+                        text: "注册失败",
+                        icon: "error",
+                    });
+                }
+            },
+            error: function () {
+                swal({
+                    text: "服务异常",
+                    icon: "error",
+                });
+            }
+        });
+    }
+
+</script>
+</html>

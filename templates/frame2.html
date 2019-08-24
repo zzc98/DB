@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>客户信息查询</title>
+    <script src="/static/lib/jquery.min.js"></script>
+    <script src="/static/lib/bootstrap.min.js"></script>
+    <script src="/static/js/frame2.js"></script>
+    <script src="/static/lib/sweetalert.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/lib/bootstrap.min.css"/>
+</head>
+<body>
+
+<!--搜索用户-->
+<div id="search" class="form-inline" style="margin: 10px">
+    <div class="form-group">
+        <input type="text" class="form-control" id="search_id" placeholder="ID号">
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control" id="search_name" placeholder="用户名">
+    </div>
+    <button type="button" class="btn btn-primary" id="change_submit" onclick="search_submit()">查询</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">添加</button>
+</div>
+
+<!--增加用户的模态框-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">创建客户信息</h4>
+            </div>
+            <div class="modal-body">
+                <div id="add">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="add_name" placeholder="用户名">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="add_password" placeholder="密码">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="add_phone" placeholder="电话">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="add_credit" placeholder="积分">
+                    </div>
+                    <div class="form-group">
+                        <select class="form-control" id="add_sex" name="type" title="性别">
+                                <option value="男">男</option>
+                                <option value="女">女</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <input type="date" class="form-control" id="add_birthday" placeholder="生日">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="add_address" placeholder="地址">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="add_no()" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="add_submit()">增加</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--修改用户的模态框-->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">修改信息</h4>
+            </div>
+            <div class="modal-body">
+                <div id="change">
+                    <div class="form-group">
+                        <label for="change_id">ID</label>
+                        <input type="text" class="form-control" id="change_id" placeholder="id" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="change_name">用户名</label>
+                        <input type="text" class="form-control" id="change_name" placeholder="用户名">
+                    </div>
+                    <div class="form-group">
+                        <label for="change_password">密码</label>
+                        <input type="text" class="form-control" id="change_password" placeholder="密码">
+                    </div>
+                    <div class="form-group">
+                        <label for="change_phone">电话</label>
+                        <input type="text" class="form-control" id="change_phone" placeholder="电话">
+                    </div>
+                    <div class="form-group">
+                        <label for="change_credit">积分</label>
+                        <input type="text" class="form-control" id="change_credit" placeholder="积分">
+                    </div>
+                    <div class="form-group">
+                        <label for="change_sex">性别</label>
+                        <select class="form-control" id="change_sex" name="type" title="性别">
+                                <option value="男">男</option>
+                                <option value="女">女</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="change_birthday">生日</label>
+                        <input type="date" class="form-control" id="change_birthday">
+                    </div>
+                    <div class="form-group">
+                        <label for="change_address">地址</label>
+                        <input type="text" class="form-control" id="change_address" placeholder="地址">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="change_submit()">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--用户信息展示-->
+<h2 class="sub-header">Customer List</h2>
+<table class="table table-hover table-bordered">
+    <tr>
+        <td style="width: 11.1%">ID</td>
+        <td style="width: 11.1%">用户名</td>
+        <td style="width: 11.1%">密码</td>
+        <td style="width: 11.1%">电话</td>
+        <td style="width: 11.1%">积分</td>
+        <td style="width: 11.1%">性别</td>
+        <td style="width: 11.1%">生日</td>
+        <td style="width: 11.1%">地址</td>
+        <td style="width: 11.1%">操作</td>
+    </tr>
+    {% for user in user_list %}
+        <tr>
+            <td>{{ user.id_field }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.password }}</td>
+            <td>{{ user.phone }}</td>
+            <td>{{ user.credit }}</td>
+            <td>{{ user.sex }}</td>
+            <td>{{ user.birthday }}</td>
+            <td>{{ user.address }}</td>
+            <td>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal2"
+                        onclick="change_user('{{ user.id_field }}','{{ user.name }}','{{ user.password }}','{{ user.phone }}','{{ user.credit }}','{{ user.sex }}','{{ user.birthday }}','{{ user.address }}')">
+                    修改
+                </button>
+                <button class="btn btn-danger " onclick="del_user('{{ user.id_field }}')">
+                    删除
+                </button>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+</body>
+</html>

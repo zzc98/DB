@@ -70,7 +70,7 @@
             function () {
                 $('html,body').animate({scrollTop: '0px'}, 'slow');
             });
-        minHeight ? minHeight = minHeight : minHeight = 600;
+        minHeight = minHeight ? minHeight : minHeight = 600;
         $(window).scroll(function () {
             let s = $(window).scrollTop();
             if (s > minHeight)

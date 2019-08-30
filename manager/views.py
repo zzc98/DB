@@ -3,6 +3,10 @@ import json as js
 from manager import models
 from django.http import HttpResponse
 import time
+import base64
+import urllib
+import ssl
+from urllib import request as url_req
 
 
 def home(request):
@@ -579,3 +583,110 @@ def chart_count(chart_type, pie, line):
                 money = float(j.money)
             temp_dict[kind_list.get(kind_id=book.type_field).kind_name] += money
         line.months.append(temp_dict)
+
+
+# 管理员信息管理
+def manager_account(request):
+    manager_list = models.Manager.objects.all()
+    return render(request, 'frame2_1.html', {'manager_list': manager_list})
+
+
+# 增加管理员
+def add_manager(request):
+    try:
+        manager_name = request.POST['manager_name']
+        manager_password = request.POST['manager_password']
+        all_manager = models.Manager.objects.order_by("-id_field").first()
+        mid = all_manager.id_field + 1
+        models.Manager.objects.create(id_field=mid, name=manager_name, password=manager_password)
+        return HttpResponse(js.dumps({"status": 1, "mid": mid}))
+    except:
+        return HttpResponse(js.dumps({"status": 0}))
+
+
+# 删除管理员
+def del_manager(request):
+    try:
+        manager_id = request.POST['manager_id']
+        manager = models.Manager.objects.get(id_field=manager_id)
+        manager.delete()
+        return HttpResponse(js.dumps({"status": 1}))
+    except:
+        return HttpResponse(js.dumps({"status": 0}))
+
+
+# 修改管理员
+def change_manager(request):
+    try:
+        manager_id = request.POST['manager_id']
+        manager_name = request.POST['manager_name']
+        manager_password = request.POST['manager_password']
+        manager = models.Manager.objects.filter(id_field=manager_id)
+        manager.update(name=manager_name, password=manager_password)
+        return HttpResponse(js.dumps({"status": 1}))
+    except:
+        return HttpResponse(js.dumps({"status": 0}))
+
+
+# 管理员身份认证
+def manager_valid(request):
+    try:
+        data = request.POST["image"]
+        i1 = data.split('base64,')
+        img_data = base64.b64decode(i1[1])
+        with open('static/manager_account/temp.jpg', 'wb') as f:
+            f.write(img_data)
+        res = img('static/manager_account/temp.jpg', 'static/manager_account/manager.jpg')
+        if res:
+            return HttpResponse(js.dumps({"status": 1}))
+        else:
+            return HttpResponse(js.dumps({"status": 0}))
+    except:
+        return HttpResponse(js.dumps({"status": 0}))
+
+
+def get_token():
+    context = ssl._create_unverified_context()
+    host = 'https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client' \
+           '_id=oxWSUmCiaxLARzcavNHsh4Sq&client_secret=feMOxxWatn53Gxp2IG8rpv5bR2fIKGry'
+    request = url_req.Request(host)
+    request.add_header('Content-Type', 'application/json; charset=UTF-8')
+    response = url_req.urlopen(request, context=context)
+    content = response.read()
+    content = bytes.decode(content)
+    content = eval(content[:-1])
+    return content['access_token']
+
+
+# 转换图片
+# 读取文件内容，转换为base64编码
+# 二进制方式打开图文件
+def imgdata(file1path, file2path):
+    import base64
+    f = open(r'%s' % file1path, 'rb')
+    pic1 = base64.b64encode(f.read())
+    f.close()
+    f = open(r'%s' % file2path, 'rb')
+    pic2 = base64.b64encode(f.read())
+    f.close()
+    params = js.dumps(
+        [{"image": str(pic1, 'utf-8'), "image_type": "BASE64", "face_type": "LIVE", "quality_control": "LOW"},
+         {"image": str(pic2, 'utf-8'), "image_type": "BASE64", "face_type": "IDCARD", "quality_control": "LOW"}]
+    )
+    return params.encode(encoding='UTF8')
+
+
+# 进行对比获得结果
+def img(file1path, file2path):
+    token = get_token()
+    context = ssl._create_unverified_context()
+    params = imgdata(file1path, file2path)
+    request_url = "https://aip.baidubce.com/rest/2.0/face/v3/match"
+    request_url = request_url + "?access_token=" + token
+    request = url_req.Request(url=request_url, data=params)
+    request.add_header('Content-Type', 'application/json')
+    response = url_req.urlopen(request, context=context)
+    content = response.read()
+    content = eval(content)
+    score = content['result']['score']
+    return score > 80

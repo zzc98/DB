@@ -57,7 +57,14 @@ urlpatterns = [
     path('manager/change_back_info', mv.change_back_info),  # 修改退货订单
     re_path('manager/search_back/.*', mv.search_back),  # 条件查询退货订单
 
-    # 8. 统计
+    # 8. 管理员账号管理
+    path('manager/manager_account', mv.manager_account),  # 初始化管理员列表
+    path('manager/manager_valid', mv.manager_valid),  # 管理员权限认证
+    path('manager/add_manager', mv.add_manager),  # 增加管理员
+    path('manager/delete_manager', mv.del_manager),  # 删除管理员
+    path('manager/change_manager', mv.change_manager),  # 修改管理员信息
+
+    # 9. 统计
     path('manager/chart1', mv.chart1),  # 销售统计
     path('manager/chart2', mv.chart2),  # 预售统计
     path('manager/chart3', mv.chart3),  # 退货统计

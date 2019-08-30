@@ -5,7 +5,6 @@
     <title>网上书店管理系统</title>
     <script src="/static/lib/jquery.min.js"></script>
     <script src="/static/lib/bootstrap.min.js"></script>
-    <script src="/static/js/manager.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/lib/bootstrap.min.css"/>
     <link rel="stylesheet" type="text/css" href="/static/css/manager.css"/>
 </head>
@@ -31,11 +30,12 @@
         <div class="menu">
             <div class="menu_title" id="menu2">
                 <img src="/static/img/menu2.png">
-                <span class="my_span1"> 客户管理</span>
+                <span class="my_span1"> 用户管理</span>
                 <img src="/static/img/hide.png" class="status_img" id="status_img2">
             </div>
             <div class="menu_item" id="wrap2">
                 <div class="item" id="frame3">客户信息管理</div>
+                <div class="item" id="frame12">管理员信息管理</div>
             </div>
         </div>
         <div class="menu">
@@ -68,4 +68,296 @@
     </div>
 </div>
 </body>
+<script>
+    function Height(obj) {
+    let cwin = obj;
+    if (document.getElementById) {
+        if (cwin && !window.opera) {
+            if (cwin.contentDocument && cwin.contentDocument.body.offsetHeight)
+                cwin.height = cwin.contentDocument.body.offsetHeight;
+            else if (cwin.Document && cwin.Document.body.scrollHeight)
+                cwin.height = cwin.Document.body.scrollHeight;
+        }
+    }
+}
+
+
+$(function () {
+    let frameContent = $("#frameContent");
+    let frame1 = $("#frame1");
+    let frame2 = $("#frame2");
+    let frame3 = $("#frame3");
+    let frame6 = $("#frame6");
+    let frame7 = $("#frame7");
+    let frame8 = $("#frame8");
+    let frame9 = $("#frame9");
+    let frame10 = $("#frame10");
+    let frame11 = $("#frame11");
+    let frame12 = $("#frame12");
+    $("#menu1").click(function () {
+        $("#wrap1").slideToggle("slow");
+        let img1 = $("#status_img1");
+        if (img1.attr("src") === "/static/img/hide.png")
+            img1.attr("src", "/static/img/show.png");
+        else
+            img1.attr("src", "/static/img/hide.png");
+    });
+    $("#menu2").click(function () {
+        $("#wrap2").slideToggle("slow");
+        let img2 = $("#status_img2");
+        if (img2.attr("src") === "/static/img/hide.png")
+            img2.attr("src", "/static/img/show.png");
+        else
+            img2.attr("src", "/static/img/hide.png");
+    });
+    $("#menu3").click(function () {
+        $("#wrap3").slideToggle("slow");
+        let img3 = $("#status_img3");
+        if (img3.attr("src") === "/static/img/hide.png")
+            img3.attr("src", "/static/img/show.png");
+        else
+            img3.attr("src", "/static/img/hide.png");
+    });
+    $("#menu4").click(function () {
+        $("#wrap4").slideToggle("slow");
+        let img4 = $("#status_img");
+        if (img4.attr("src") === "/static/img/hide.png")
+            img4.attr("src", "/static/img/show.png");
+        else
+            img4.attr("src", "/static/img/hide.png");
+    });
+
+    frame1.click(function () {
+        frameContent.attr("src", "/manager/bookinfo");
+        frame1.css("background", '#428bca');
+        frame1.css("color", '#ffffff');
+        frame2.css("background", '#fafafa');
+        frame2.css("color", '#000');
+        frame3.css("background", '#fafafa');
+        frame3.css("color", '#000');
+        frame6.css("background", '#fafafa');
+        frame6.css("color", '#000');
+        frame7.css("background", '#fafafa');
+        frame7.css("color", '#000');
+        frame8.css("background", '#fafafa');
+        frame8.css("color", '#000');
+        frame9.css("background", '#fafafa');
+        frame9.css("color", '#000');
+        frame10.css("background", '#fafafa');
+        frame10.css("color", '#000');
+        frame11.css("background", '#fafafa');
+        frame11.css("color", '#000');
+        frame12.css("background", '#fafafa');
+        frame12.css("color", '#000');
+    });
+    frame2.click(function () {
+        frameContent.attr("src", "/manager/bookkind");
+        frame1.css("background", '#fafafa');
+        frame1.css("color", '#000');
+        frame2.css("background", '#428bca');
+        frame2.css("color", '#ffffff');
+        frame3.css("background", '#fafafa');
+        frame3.css("color", '#000');
+        frame6.css("background", '#fafafa');
+        frame6.css("color", '#000');
+        frame7.css("background", '#fafafa');
+        frame7.css("color", '#000');
+        frame8.css("background", '#fafafa');
+        frame8.css("color", '#000');
+        frame9.css("background", '#fafafa');
+        frame9.css("color", '#000');
+        frame10.css("background", '#fafafa');
+        frame10.css("color", '#000');
+        frame11.css("background", '#fafafa');
+        frame11.css("color", '#000');
+        frame12.css("background", '#fafafa');
+        frame12.css("color", '#000');
+    });
+    frame3.click(function () {
+        frameContent.attr("src", "/manager/customerinfo");
+        frame1.css("background", '#fafafa');
+        frame1.css("color", '#000');
+        frame2.css("background", '#fafafa');
+        frame2.css("color", '#000');
+        frame3.css("background", '#428bca');
+        frame3.css("color", '#ffffff');
+        frame6.css("background", '#fafafa');
+        frame6.css("color", '#000');
+        frame7.css("background", '#fafafa');
+        frame7.css("color", '#000');
+        frame8.css("background", '#fafafa');
+        frame8.css("color", '#000');
+        frame9.css("background", '#fafafa');
+        frame9.css("color", '#000');
+        frame10.css("background", '#fafafa');
+        frame10.css("color", '#000');
+        frame11.css("background", '#fafafa');
+        frame11.css("color", '#000');
+        frame12.css("background", '#fafafa');
+        frame12.css("color", '#000');
+    });
+
+    frame6.click(function () {
+        frameContent.attr("src", "/manager/sellinfo");
+        frame1.css("background", '#fafafa');
+        frame1.css("color", '#000');
+        frame2.css("background", '#fafafa');
+        frame2.css("color", '#000');
+        frame3.css("background", '#fafafa');
+        frame3.css("color", '#000');
+        frame6.css("background", '#428bca');
+        frame6.css("color", '#ffffff');
+        frame7.css("background", '#fafafa');
+        frame7.css("color", '#000');
+        frame8.css("background", '#fafafa');
+        frame8.css("color", '#000');
+        frame9.css("background", '#fafafa');
+        frame9.css("color", '#000');
+        frame10.css("background", '#fafafa');
+        frame10.css("color", '#000');
+        frame11.css("background", '#fafafa');
+        frame11.css("color", '#000');
+        frame12.css("background", '#fafafa');
+        frame12.css("color", '#000');
+    });
+    frame7.click(function () {
+        frameContent.attr("src", "/manager/pre_sellinfo");
+        frame1.css("background", '#fafafa');
+        frame1.css("color", '#000');
+        frame2.css("background", '#fafafa');
+        frame2.css("color", '#000');
+        frame3.css("background", '#fafafa');
+        frame3.css("color", '#000');
+        frame6.css("background", '#fafafa');
+        frame6.css("color", '#000');
+        frame7.css("background", '#428bca');
+        frame7.css("color", '#ffffff');
+        frame8.css("background", '#fafafa');
+        frame8.css("color", '#000');
+        frame9.css("background", '#fafafa');
+        frame9.css("color", '#000');
+        frame10.css("background", '#fafafa');
+        frame10.css("color", '#000');
+        frame11.css("background", '#fafafa');
+        frame11.css("color", '#000');
+        frame12.css("background", '#fafafa');
+        frame12.css("color", '#000');
+    });
+    frame8.click(function () {
+        frameContent.attr("src", "/manager/backinfo");
+        frame1.css("background", '#fafafa');
+        frame1.css("color", '#000');
+        frame2.css("background", '#fafafa');
+        frame2.css("color", '#000');
+        frame3.css("background", '#fafafa');
+        frame3.css("color", '#000');
+        frame6.css("background", '#fafafa');
+        frame6.css("color", '#000');
+        frame7.css("background", '#fafafa');
+        frame7.css("color", '#000');
+        frame8.css("background", '#428bca');
+        frame8.css("color", '#ffffff');
+        frame9.css("background", '#fafafa');
+        frame9.css("color", '#000');
+        frame10.css("background", '#fafafa');
+        frame10.css("color", '#000');
+        frame11.css("background", '#fafafa');
+        frame11.css("color", '#000');
+        frame12.css("background", '#fafafa');
+        frame12.css("color", '#000');
+    });
+    frame9.click(function () {
+        frameContent.attr("src", "/manager/chart1");
+        frame1.css("background", '#fafafa');
+        frame1.css("color", '#000');
+        frame2.css("background", '#fafafa');
+        frame2.css("color", '#000');
+        frame3.css("background", '#fafafa');
+        frame3.css("color", '#000');
+        frame6.css("background", '#fafafa');
+        frame6.css("color", '#000');
+        frame7.css("background", '#fafafa');
+        frame7.css("color", '#000');
+        frame8.css("background", '#fafafa');
+        frame8.css("color", '#000');
+        frame9.css("background", '#428bca');
+        frame9.css("color", '#ffffff');
+        frame10.css("background", '#fafafa');
+        frame10.css("color", '#000');
+        frame11.css("background", '#fafafa');
+        frame11.css("color", '#000');
+        frame12.css("background", '#fafafa');
+        frame12.css("color", '#000');
+    });
+    frame10.click(function () {
+        frameContent.attr("src", "/manager/chart2");
+        frame1.css("background", '#fafafa');
+        frame1.css("color", '#000');
+        frame2.css("background", '#fafafa');
+        frame2.css("color", '#000');
+        frame3.css("background", '#fafafa');
+        frame3.css("color", '#000');
+        frame6.css("background", '#fafafa');
+        frame6.css("color", '#000');
+        frame7.css("background", '#fafafa');
+        frame7.css("color", '#000');
+        frame8.css("background", '#fafafa');
+        frame8.css("color", '#000');
+        frame9.css("background", '#fafafa');
+        frame9.css("color", '#000');
+        frame10.css("background", '#428bca');
+        frame10.css("color", '#ffffff');
+        frame11.css("background", '#fafafa');
+        frame11.css("color", '#000');
+        frame12.css("background", '#fafafa');
+        frame12.css("color", '#000');
+    });
+    frame11.click(function () {
+        frameContent.attr("src", "/manager/chart3");
+        frame1.css("background", '#fafafa');
+        frame1.css("color", '#000');
+        frame2.css("background", '#fafafa');
+        frame2.css("color", '#000');
+        frame3.css("background", '#fafafa');
+        frame3.css("color", '#000');
+        frame6.css("background", '#fafafa');
+        frame6.css("color", '#000');
+        frame7.css("background", '#fafafa');
+        frame7.css("color", '#000');
+        frame8.css("background", '#fafafa');
+        frame8.css("color", '#000');
+        frame9.css("background", '#fafafa');
+        frame9.css("color", '#000');
+        frame10.css("background", '#fafafa');
+        frame10.css("color", '#000');
+        frame11.css("background", '#428bca');
+        frame11.css("color", '#ffffff');
+        frame12.css("background", '#fafafa');
+        frame12.css("color", '#000');
+    });
+    frame12.click(function () {
+        frameContent.attr("src", "/manager/manager_account");
+        frame1.css("background", '#fafafa');
+        frame1.css("color", '#000');
+        frame2.css("background", '#fafafa');
+        frame2.css("color", '#000');
+        frame3.css("background", '#fafafa');
+        frame3.css("color", '#000');
+        frame6.css("background", '#fafafa');
+        frame6.css("color", '#000');
+        frame7.css("background", '#fafafa');
+        frame7.css("color", '#000');
+        frame8.css("background", '#fafafa');
+        frame8.css("color", '#000');
+        frame9.css("background", '#fafafa');
+        frame9.css("color", '#000');
+        frame10.css("background", '#fafafa');
+        frame10.css("color", '#000');
+        frame11.css("background", '#fafafa');
+        frame11.css("color", '#000');
+        frame12.css("background", '#428bca');
+        frame12.css("color", '#ffffff');
+    });
+});
+</script>
 </html>

@@ -309,6 +309,8 @@
                         b.removeAttr("onclick");
                         b.removeAttr("data-target");
                         flag = true;
+                        mediaStreamTrack && mediaStreamTrack.stop();
+                        mediaStreamTrack2 && mediaStreamTrack2.stop();
                         $('#Modal').modal('hide');
                     });
                 } else {

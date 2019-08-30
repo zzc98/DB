@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员账号管理</title>
+    <script src="/static/lib/jquery.min.js"></script>
+    <script src="/static/lib/bootstrap.min.js"></script>
+    <script src="/static/lib/sweetalert.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/lib/bootstrap.min.css"/>
+</head>
+<body>
+
+<!-- 权限认证 —— 人脸识别模态框 -->
+<div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="cancel()"><span
+                        aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">人脸识别</h4>
+            </div>
+            <div class="modal-body">
+                <video id="vi" width="560" height="300"></video>
+                <canvas id="canvas" width="560" height="300"></canvas>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="cancel()">取消</button>
+                <button type="button" class="btn btn-default" onclick="snap_face()">拍照</button>
+                <button type="button" class="btn btn-primary" onclick="submit_face()">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--增加管理员的模态框-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">增加管理员</h4>
+            </div>
+            <div class="modal-body">
+                <div id="add">
+                    <form id="my_form1" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="add_manager_name">类别</label>
+                            <input type="text" class="form-control" id="add_manager_name" placeholder="管理员名称">
+                            <label for="add_manager_password">类别</label>
+                            <input type="text" class="form-control" id="add_manager_password" placeholder="管理员密码">
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" onclick="add_no()" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="add_submit()">增加</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--修改管理员的模态框-->
+<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">修改信息</h4>
+            </div>
+            <div class="modal-body">
+                <div id="change">
+                    <div class="form-group">
+                        <label for="change_manager_id">ID</label>
+                        <input type="text" class="form-control" id="change_manager_id" disabled="disabled">
+                    </div>
+                    <div class="form-group">
+                        <label for="change_manager_name">管理员姓名</label>
+                        <input type="text" class="form-control" id="change_manager_name" placeholder="姓名">
+                    </div>
+                    <div class="form-group">
+                        <label for="change_manager_password">管理员密码</label>
+                        <input type="password" class="form-control" id="change_manager_password" placeholder="密码">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="change_submit()">确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--管理员展示-->
+<h2 class="sub-header">Manager List
+    <button class="btn btn-primary" style="margin-left: 10px" data-toggle="modal" data-target="#Modal" onclick="draw()"
+            id="identity">
+        权限认证
+    </button>
+    <button class="btn btn-primary" style="margin-left: 10px" data-toggle="modal" data-target="#myModal">增加</button>
+</h2>
+
+<table class="table table-hover table-bordered">
+    <tr>
+        <td style="width: 33%">类别ID</td>
+        <td style="width: 33%">书籍类别</td>
+        <td style="width: 33%; text-align: center">操作</td>
+    </tr>
+    {% for m in manager_list %}
+        <tr>
+            <td>{{ m.id_field }}</td>
+            <td>{{ m.name }}</td>
+            <td style="text-align: center">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal2"
+                        onclick="change_manager('{{ m.id_field }}','{{ m.name }}')">
+                    修改
+                </button>
+                <button class="btn btn-danger" onclick="del_manager('{{ m.id_field }}')">
+                    删除
+                </button>
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+</body>
+<script>
+    let flag = false;
+    let m_id;
+
+    // 修改信息时显示原来信息
+    function change_manager(manager_id, manager_name) {
+        if (!flag) {
+            swal({icon: 'info', text: "请先进行权限认证"});
+            return;
+        }
+        $("#change_manager_id").val(manager_id);
+        $("#change_manager_name").val(manager_name);
+        $("#change_manager_password").val("");
+        m_id = manager_id;
+    }
+
+    // 提交修改信息
+    function change_submit() {
+        let post_data = {
+            "manager_id": m_id,
+            "manager_name": $("#change_manager_name").val(),
+            "manager_password": $("#change_manager_password").val(),
+        };
+        $.ajax({
+            url: "/manager/change_manager",
+            type: "POST",
+            data: post_data,
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data["status"] === 1) {
+                    swal({icon: 'success', text: "操作成功"}).then(() => {
+                        window.location.reload();
+                    });
+                }
+                else
+                    swal({icon: 'error', text: "修改失败"});
+                $("#change_manager_id").val("");
+                $("#change_manager_name").val("");
+                $("#change_manager_password").val("");
+            },
+            error: function () {
+                swal({icon: 'error', text: "服务异常"});
+            }
+        });
+    }
+
+    // 删除管理员
+    function del_manager(manager_id) {
+        if (!flag) {
+            swal({icon: 'info', text: "请先进行权限认证"});
+            return;
+        }
+        let post_data = {"manager_id": manager_id};
+        $.ajax({
+            url: " /manager/delete_manager",
+            type: "POST",
+            data: post_data,
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data["status"] === 1) {
+                    swal({icon: 'success', text: "操作成功"}).then(() => {
+                        window.location.reload();
+                    });
+                }
+                else
+                    swal({icon: 'error', text: "修改失败"});
+            },
+            error: function () {
+                swal({icon: 'error', text: "服务异常"});
+            }
+        });
+    }
+
+    // 增加管理员
+    function add_submit() {
+        if (!flag) {
+            swal({icon: 'info', text: "请先进行权限认证"});
+            return;
+        }
+        let post_data = {
+            "manager_name": $('#add_manager_name').val(),
+            "manager_password": $('#add_manager_password').val(),
+        };
+        $.ajax({
+            url: "/manager/add_manager",
+            type: "POST",
+            data: post_data,
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data["status"] === 1) {
+                    swal({icon: 'success', text: "操作成功, 新的ID" + data["mid"]}).then(() => {
+                        window.location.reload();
+                    });
+                }
+                else
+                    swal({icon: 'error', text: "添加失败"});
+            },
+            error: function () {
+                swal({icon: 'error', text: "服务异常"});
+            }
+        });
+    }
+
+    //取消增加
+    function add_no() {
+        $('#add_manager_name').val("");
+        $('#add_manager_password').val("");
+    }
+
+
+    //访问用户媒体设备的兼容方法(获得浏览器的支持)
+    function getUserMedia2(constraints, success, error) {
+        if (navigator.mediaDevices.getUserMedia) {
+            //最新的标准API
+            navigator.mediaDevices.getUserMedia(constraints).then(success).catch(error);
+        } else if (navigator.webkitGetUserMedia) {
+            //webkit核心浏览器
+            navigator.webkitGetUserMedia(constraints, success, error)
+        } else if (navigator.mozGetUserMedia) {
+            //firefox浏览器
+            navigator.mozGetUserMedia(constraints, success, error);
+        } else if (navigator.getUserMedia) {
+            //旧版API
+            navigator.getUserMedia(constraints, success, error);
+        }
+    }
+
+    //用于人脸识别签到的变量
+    let video = document.getElementById('vi');
+    let canvas = document.getElementById('canvas');
+    let context = canvas.getContext('2d');
+    let mediaStreamTrack, mediaStreamTrack2;
+
+    //成功打开摄像头
+    function success(stream) {
+        mediaStreamTrack = typeof stream.stop === 'function' ? stream : stream.getTracks()[1];
+        mediaStreamTrack2 = typeof stream.stop === 'function' ? stream : stream.getTracks()[0];
+        video.srcObject = stream;
+        video.play();
+    }
+
+    //失败打开摄像头
+    function error() {
+        swal({icon: 'error', text: "打开媒体失败"});
+
+    }
+
+    function draw() {
+        context.drawImage(video, 0, 0, 560, 300);
+        if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia)
+            getUserMedia2({video: {width: 560, height: 300}, audio: true}, success, error);
+        else
+            swal({icon: 'error', text: "不支持访问用户媒体"});
+    }
+
+    //拍照
+    function snap_face() {
+        context.drawImage(video, 0, 0);
+    }
+
+
+    //提交照片   签到
+    function submit_face() {
+        let saveImage = canvas.toDataURL('image/png');
+        let obj = {"image": saveImage};
+        $.ajax({
+            url: "/manager/manager_valid",
+            type: 'POST',
+            data: obj,
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data["status"] === 1) {
+                    swal({icon: 'success', text: "认证成功"}).then(() => {
+                        let b = $("#identity");
+                        b.removeClass("btn-primary");
+                        b.addClass("btn-default");
+                        b.text("已认证");
+                        b.removeAttr("onclick");
+                        b.removeAttr("data-target");
+                        flag = true;
+                        $('#Modal').modal('hide');
+                    });
+                } else {
+                    swal({icon: 'error', text: "认证失败"});
+                }
+            },
+            error: function () {
+                swal({icon: 'error', text: "认证失败"});
+                setTimeout(function () {
+                    mediaStreamTrack && mediaStreamTrack.stop();
+                    mediaStreamTrack2 && mediaStreamTrack2.stop();
+                    $('#Modal').modal('hide');
+                }, 3000);
+            }
+        });
+    }
+
+    //取消人脸识别签到
+    function cancel() {
+        mediaStreamTrack && mediaStreamTrack.stop();
+        mediaStreamTrack2 && mediaStreamTrack2.stop();
+    }
+</script>
+</html>

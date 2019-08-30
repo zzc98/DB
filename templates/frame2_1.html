@@ -18,7 +18,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="cancel()"><span
                         aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">人脸识别</h4>
+                <h4 class="modal-title">权限认证</h4>
             </div>
             <div class="modal-body">
                 <video id="vi" width="560" height="300"></video>
@@ -48,7 +48,7 @@
                     <form id="my_form1" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="add_manager_name">类别</label>
-                            <input type="text" class="form-control" id="add_manager_name" placeholder="管理员名称">
+                            <input type="text" class="form-control" id="add_manager_name" placeholder="管理员姓名">
                             <label for="add_manager_password">类别</label>
                             <input type="text" class="form-control" id="add_manager_password" placeholder="管理员密码">
                         </div>
@@ -108,8 +108,8 @@
 
 <table class="table table-hover table-bordered">
     <tr>
-        <td style="width: 33%">类别ID</td>
-        <td style="width: 33%">书籍类别</td>
+        <td style="width: 33%">管理员ID</td>
+        <td style="width: 33%">管理员姓名</td>
         <td style="width: 33%; text-align: center">操作</td>
     </tr>
     {% for m in manager_list %}

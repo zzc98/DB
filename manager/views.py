@@ -4,9 +4,7 @@ from manager import models
 from django.http import HttpResponse
 import time
 import base64
-import urllib
-import ssl
-from urllib import request as url_req
+import face_recognition
 
 
 def home(request):
@@ -636,57 +634,14 @@ def manager_valid(request):
         img_data = base64.b64decode(i1[1])
         with open('static/manager_account/temp.jpg', 'wb') as f:
             f.write(img_data)
-        res = img('static/manager_account/temp.jpg', 'static/manager_account/manager.jpg')
-        if res:
+        img1 = face_recognition.load_image_file("static/manager_account/manager.jpg")
+        data1 = face_recognition.face_encodings(img1)[0]
+        img2 = face_recognition.load_image_file("static/manager_account/temp.jpg")
+        data2 = face_recognition.face_encodings(img2)[0]
+        res = face_recognition.compare_faces([data1], data2)
+        if res[0]:
             return HttpResponse(js.dumps({"status": 1}))
         else:
             return HttpResponse(js.dumps({"status": 0}))
     except:
         return HttpResponse(js.dumps({"status": 0}))
-
-
-def get_token():
-    context = ssl._create_unverified_context()
-    host = 'https://aip.baidubce.com/oauth/2.0/token?grant_type=client_credentials&client' \
-           '_id=oxWSUmCiaxLARzcavNHsh4Sq&client_secret=feMOxxWatn53Gxp2IG8rpv5bR2fIKGry'
-    request = url_req.Request(host)
-    request.add_header('Content-Type', 'application/json; charset=UTF-8')
-    response = url_req.urlopen(request, context=context)
-    content = response.read()
-    content = bytes.decode(content)
-    content = eval(content[:-1])
-    return content['access_token']
-
-
-# 转换图片
-# 读取文件内容，转换为base64编码
-# 二进制方式打开图文件
-def imgdata(file1path, file2path):
-    import base64
-    f = open(r'%s' % file1path, 'rb')
-    pic1 = base64.b64encode(f.read())
-    f.close()
-    f = open(r'%s' % file2path, 'rb')
-    pic2 = base64.b64encode(f.read())
-    f.close()
-    params = js.dumps(
-        [{"image": str(pic1, 'utf-8'), "image_type": "BASE64", "face_type": "LIVE", "quality_control": "LOW"},
-         {"image": str(pic2, 'utf-8'), "image_type": "BASE64", "face_type": "IDCARD", "quality_control": "LOW"}]
-    )
-    return params.encode(encoding='UTF8')
-
-
-# 进行对比获得结果
-def img(file1path, file2path):
-    token = get_token()
-    context = ssl._create_unverified_context()
-    params = imgdata(file1path, file2path)
-    request_url = "https://aip.baidubce.com/rest/2.0/face/v3/match"
-    request_url = request_url + "?access_token=" + token
-    request = url_req.Request(url=request_url, data=params)
-    request.add_header('Content-Type', 'application/json')
-    response = url_req.urlopen(request, context=context)
-    content = response.read()
-    content = eval(content)
-    score = content['result']['score']
-    return score > 80

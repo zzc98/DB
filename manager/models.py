@@ -36,7 +36,7 @@ class Book(models.Model):
     author = models.CharField(max_length=255, blank=True, null=True)
     des = models.CharField(max_length=2048, blank=True, null=True)
     img = models.CharField(max_length=255, blank=True, null=True)
-    type_field = models.CharField(db_column='type_', max_length=255, blank=True, null=True)
+    type_field = models.IntegerField(db_column='type_', blank=True, null=True)
     number_field = models.IntegerField(db_column='number_', blank=True, null=True)
     on_sale = models.IntegerField(blank=True, null=True)
 

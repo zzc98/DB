@@ -222,5 +222,14 @@
 
     init();
 
+    //通过关键词查询书籍
+    function searchByKey() {
+        window.location.href = '/user/searchBookByKey?key=' + $("#keyword").val();
+    }
+
+    //通过类别查询书籍
+    function searchByKind(kind_id) {
+        window.location.href = '/user/searchBookByKind?kind=' + kind_id;
+    }
 </script>
 </html>

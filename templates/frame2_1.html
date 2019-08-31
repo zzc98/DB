@@ -135,10 +135,6 @@
 
     // 修改信息时显示原来信息
     function change_manager(manager_id, manager_name) {
-        if (!flag) {
-            swal({icon: 'info', text: "请先进行权限认证"});
-            return;
-        }
         $("#change_manager_id").val(manager_id);
         $("#change_manager_name").val(manager_name);
         $("#change_manager_password").val("");
@@ -147,6 +143,10 @@
 
     // 提交修改信息
     function change_submit() {
+        if (!flag) {
+            swal({icon: 'info', text: "请先进行权限认证"});
+            return;
+        }
         let post_data = {
             "manager_id": m_id,
             "manager_name": $("#change_manager_name").val(),

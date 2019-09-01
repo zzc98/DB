@@ -53,16 +53,15 @@ def buy_book(request):
         isbn = request.POST['isbn']
         customer = request.POST['customer']
         number_ = request.POST['number']
+        if int(number_) < 0:
+            return HttpResponse(js.dumps({"status": 0}))
         price1 = request.POST['price1']
         price2 = request.POST['price2']
         address = request.POST['address']
         phone = request.POST['phone']
         status = request.POST['status']
-    except:
-        return HttpResponse(js.dumps({"status": 0}))
-    # 创建订单 + 修改积分 + 书籍数目修改
-    # 销售 number（剩余量） 减去数目，预售 number （待售量）加上数目
-    try:
+        # 创建订单 + 修改积分 + 书籍数目修改
+        # 销售 number（剩余量） 减去数目，预售 number （待售量）加上数目
         book = models.Book.objects.filter(isbn=isbn)
         if int(status) == 1:  # 销售中的
             if book.first().number_field - int(number_) < 0:

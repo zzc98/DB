@@ -53,6 +53,8 @@ def change_book_info(request):
         des = request.POST["des"]
         type_ = request.POST["type"]
         number_ = request.POST["number"]
+        if int(number_) < 0:
+            return HttpResponse(js.dumps({"status": 0}))
         on_sale = request.POST["on_sale"]
         book = models.Book.objects.filter(isbn=isbn)
         book.update(title=title, price=price, author=author, des=des, type_field=type_,

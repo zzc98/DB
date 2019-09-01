@@ -32,6 +32,8 @@
         </div>
     </div>
 </div>
+<a id="c_name" href="/user/goto_userManage" target="_blank"></a>
+<a id="quit" href="/user/login" onclick="quit()">退出</a>
 
 <div class="container">
     <h2 class="sub-header">书籍详情</h2>
@@ -78,7 +80,7 @@
                 <h4 class="modal-title">填写订单</h4>
             </div>
             <div class="modal-body">
-                <div id="change_pwd">
+                <div>
                     <form enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="address">收货地址</label>
@@ -107,7 +109,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" id="change_pwd_submit" onclick="buyBook()">提交
+                <button type="button" class="btn btn-primary" onclick="buyBook()">提交
                 </button>
             </div>
         </div>
@@ -129,19 +131,12 @@
 
     let nEle = $("#number");
     let id = getCookie('CID');
+    let price = {{ book.price }};
     let credit = 0;
 
     function change_number() {
         let n = nEle.val();
-        let p = 0;
-        {% if book.price %}
-            p = {{ book.price }};
-        {% endif %}
-        let credit = 0;
-        {% if credit %}
-            credit = {{ credit }};
-        {% endif %}
-        let m1 = n * p;
+        let m1 = n * price;
         $("#should").text('原价：￥' + m1.toFixed(2));
         let m2 = m1 - 5 * Math.floor(credit / 50);
         if (m2 < 0)
@@ -159,9 +154,7 @@
                 if (data['status'] === 1)
                     $("#c_name").text('欢迎您 ' + data['name']);
             },
-            error: function () {
-                swal({icon: 'error', text: '服务异常'});
-            }
+            error: function () {}
         });
         $.ajax({
             url: "/user/getCreditByID",

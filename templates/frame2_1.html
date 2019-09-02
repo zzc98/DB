@@ -47,9 +47,9 @@
                 <div id="add">
                     <form id="my_form1" enctype="multipart/form-data">
                         <div class="form-group">
-                            <label for="add_manager_name">类别</label>
+                            <label for="add_manager_name">姓名</label>
                             <input type="text" class="form-control" id="add_manager_name" placeholder="管理员姓名">
-                            <label for="add_manager_password">类别</label>
+                            <label for="add_manager_password">密码</label>
                             <input type="text" class="form-control" id="add_manager_password" placeholder="管理员密码">
                         </div>
                     </form>
@@ -130,7 +130,32 @@
 </table>
 </body>
 <script>
-    let flag = false;
+    // 获取权限标识
+    function getCookie(cname) {
+        let name = cname + "=";
+        let ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i].trim();
+            if (c.indexOf(name) === 0)
+                return c.substring(name.length, c.length);
+        }
+        return "";
+    }
+
+    let sign = getCookie("SIGN");
+
+    function init() {
+        if (sign) {
+            let b = $("#identity");
+            b.removeClass("btn-primary");
+            b.addClass("btn-default");
+            b.text("已认证");
+            b.removeAttr("onclick");
+            b.removeAttr("data-target");
+        }
+    }
+
+    init();
     let m_id;
 
     // 修改信息时显示原来信息
@@ -143,7 +168,7 @@
 
     // 提交修改信息
     function change_submit() {
-        if (!flag) {
+        if (!sign) {
             swal({icon: 'info', text: "请先进行权限认证"});
             return;
         }
@@ -177,34 +202,44 @@
 
     // 删除管理员
     function del_manager(manager_id) {
-        if (!flag) {
+        if (!sign) {
             swal({icon: 'info', text: "请先进行权限认证"});
             return;
         }
-        let post_data = {"manager_id": manager_id};
-        $.ajax({
-            url: " /manager/delete_manager",
-            type: "POST",
-            data: post_data,
-            success: function (data) {
-                data = JSON.parse(data);
-                if (data["status"] === 1) {
-                    swal({icon: 'success', text: "操作成功"}).then(() => {
-                        window.location.reload();
-                    });
-                }
-                else
-                    swal({icon: 'error', text: "修改失败"});
-            },
-            error: function () {
-                swal({icon: 'error', text: "服务异常"});
+        swal({
+            title: "警告",
+            text: "您确定删除该管理员？",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((o) => {
+            if (o) {
+                let post_data = {"manager_id": manager_id};
+                $.ajax({
+                    url: " /manager/delete_manager",
+                    type: "POST",
+                    data: post_data,
+                    success: function (data) {
+                        data = JSON.parse(data);
+                        if (data["status"] === 1) {
+                            swal({icon: 'success', text: "操作成功"}).then(() => {
+                                window.location.reload();
+                            });
+                        }
+                        else
+                            swal({icon: 'error', text: "操作失败"});
+                    },
+                    error: function () {
+                        swal({icon: 'error', text: "服务异常"});
+                    }
+                });
             }
         });
     }
 
     // 增加管理员
     function add_submit() {
-        if (!flag) {
+        if (!sign) {
             swal({icon: 'info', text: "请先进行权限认证"});
             return;
         }
@@ -290,7 +325,7 @@
     }
 
 
-    //提交照片   签到
+    //提交照片
     function submit_face() {
         let saveImage = canvas.toDataURL('image/png');
         let obj = {"image": saveImage};
@@ -308,7 +343,7 @@
                         b.text("已认证");
                         b.removeAttr("onclick");
                         b.removeAttr("data-target");
-                        flag = true;
+                        document.cookie = "SIGN=1";
                         mediaStreamTrack && mediaStreamTrack.stop();
                         mediaStreamTrack2 && mediaStreamTrack2.stop();
                         $('#Modal').modal('hide');
@@ -333,5 +368,7 @@
         mediaStreamTrack && mediaStreamTrack.stop();
         mediaStreamTrack2 && mediaStreamTrack2.stop();
     }
+
+
 </script>
 </html>

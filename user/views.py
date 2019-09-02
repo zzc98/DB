@@ -19,10 +19,10 @@ def login(request):
 # 进行用户登录验证
 def valid(request):
     if request.method == "POST":
-        id_ = request.POST["id"]
+        phone = request.POST["phone"]
         password = request.POST["password"]
         try:
-            person = models.Customer.objects.get(id_field=id_, password=password)
+            person = models.Customer.objects.get(phone=phone, password=password)
             return HttpResponse(js.dumps({"status": 1, "name": person.name, 'id': person.id_field}))
         except:
             return HttpResponse(js.dumps({"status": 0}))
@@ -182,6 +182,9 @@ def register(request):
         sex = request.POST["sex"]
         birthday = request.POST["birthday"]
         try:
+            check = models.Customer.objects.fliter(phone=phone)
+            if check.count() == 0:
+                return HttpResponse(js.dumps({"status": 2}))
             all_user = models.Customer.objects.order_by('-id_field').first()
             uid = all_user.id_field + 1
         except:

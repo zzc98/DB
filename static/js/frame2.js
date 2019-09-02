@@ -54,7 +54,10 @@ function del_user(uid) {
         data: post_data,
         success: function (data) {
             data = JSON.parse(data);
-            if (data["status"] === 1) {
+            if(data["status"]===2){
+                swal({icon: 'info', text: "此电话已被注册"});
+            }
+            else if (data["status"] === 1) {
                 swal({icon: 'success', text: "操作成功"}).then(() => {
                     window.location.reload();
                 });

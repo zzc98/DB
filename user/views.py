@@ -222,51 +222,30 @@ def orders(request):
 
 # 销售订单表
 def get_order1(request):
-    id_ = request.POST['id']
-    sell_all = models.Sell.objects.filter(customer=id_)
-    sell_all = list(sell_all)
-    sell_list = list()
-    for i in sell_all:
-        temp = models.Order1()
-        temp.id_field = i.id_field
-        temp.isbn = i.isbn
-        temp.title = models.Book.objects.filter(isbn=temp.isbn).first().title
-        temp.img = models.Book.objects.filter(isbn=temp.isbn).first().img
-        temp.number_field = i.number_field
-        temp.price2 = str(i.price2)
-        temp.address = i.address
-        temp.phone = i.phone
-        temp.time = str(i.create_time)
-        temp.state = int(i.state)
-        sell_list.append(models.convert_to_builtin_type(temp))
-
-    return HttpResponse(js.dumps({"status": 1, 'list': sell_list}))
-
-
-# try:
-#     id_ = request.POST['id']
-#     sell_all = models.Sell.objects.filter(customer=id_)
-#     sell_all = list(sell_all)
-#     sell_list = list()
-#     for i in sell_all:
-#         try:
-#             temp = models.Order1()
-#             temp.id_field = i.id_field
-#             temp.isbn = i.isbn
-#             temp.title = models.Book.objects.filter(isbn=temp.isbn).first().title
-#             temp.img = models.Book.objects.filter(isbn=temp.isbn).first().img
-#             temp.number_field = i.number_field
-#             temp.price2 = str(i.price2)
-#             temp.address = i.address
-#             temp.phone = i.phone
-#             temp.time = str(i.create_time)
-#             temp.state = int(i.state)
-#             sell_list.append(models.convert_to_builtin_type(temp))
-#         except:
-#             continue
-#     return HttpResponse(js.dumps({"status": 1, 'list': sell_list}))
-# except:
-#     return HttpResponse(js.dumps({"status": 0}))
+    try:
+        id_ = request.POST['id']
+        sell_all = models.Sell.objects.filter(customer=id_)
+        sell_all = list(sell_all)
+        sell_list = list()
+        for i in sell_all:
+            try:
+                temp = models.Order1()
+                temp.id_field = i.id_field
+                temp.isbn = i.isbn
+                temp.title = models.Book.objects.filter(isbn=temp.isbn).first().title
+                temp.img = models.Book.objects.filter(isbn=temp.isbn).first().img
+                temp.number_field = i.number_field
+                temp.price2 = str(i.price2)
+                temp.address = i.address
+                temp.phone = i.phone
+                temp.time = str(i.create_time)
+                temp.state = int(i.state)
+                sell_list.append(models.convert_to_builtin_type(temp))
+            except:
+                continue
+        return HttpResponse(js.dumps({"status": 1, 'list': sell_list}))
+    except:
+        return HttpResponse(js.dumps({"status": 0}))
 
 
 # 预售订单表

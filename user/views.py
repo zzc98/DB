@@ -342,7 +342,7 @@ def confirm1(request):
     sell_id = request.POST['sell_id']
     try:
         sell = models.Sell.objects.filter(id_field=sell_id)
-        sell.update(state=3)  # 状态值又2变为3
+        sell.update(state=3)  # 状态值由2变为3
         return HttpResponse(js.dumps({"status": 1}))
     except:
         return HttpResponse(js.dumps({"status": 0}))
@@ -353,7 +353,7 @@ def confirm2(request):
     pre_sell_id = request.POST['pre_sell_id']
     try:
         pre_sell = models.PreSell.objects.filter(id_field=pre_sell_id)
-        pre_sell.update(state=3)  # 状态值又2变为3
+        pre_sell.update(state=3)  # 状态值由2变为3
         return HttpResponse(js.dumps({"status": 1}))
     except:
         return HttpResponse(js.dumps({"status": 0}))

@@ -201,8 +201,9 @@
             success: function (data) {
                 data = JSON.parse(data);
                 if (data["status"] === 1) {
-                    swal({icon: 'success', text: '购买成功'});
-                    window.location.reload();
+                    swal({icon: 'success', text: '购买成功'}).then(()=>{
+                        window.location.reload();
+                    });
                 }
                 else
                     swal({icon: 'error', text: '购买失败'});

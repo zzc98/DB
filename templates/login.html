@@ -198,8 +198,10 @@
                     swal({
                         text: '注册成功，您的用户ID为' + data['id'],
                         icon: "success",
+                    }).then(()=>{
+                         window.location.reload();
                     });
-                    window.location.reload();
+
                 } else {
                     swal({
                         text: "注册失败",

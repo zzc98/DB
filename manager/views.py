@@ -273,9 +273,10 @@ def change_sell_info(request):
         price2 = request.POST['price2']
         address = request.POST['address']
         phone = request.POST['phone']
+        state = request.POST['state']
         sell = models.Sell.objects.filter(id_field=id_)
         sell.update(isbn=isbn, customer=customer, number_field=number_, price1=price1, price2=price2, address=address,
-                    phone=phone)
+                    phone=phone, state=state)
         return HttpResponse(js.dumps({"status": 1}))
     except:
         return HttpResponse(js.dumps({"status": 0}))
@@ -308,13 +309,14 @@ def add_sell(request):
         price2 = request.POST['price2']
         address = request.POST['address']
         phone = request.POST['phone']
+        state = request.POST['state']
         try:
             all_sell = models.Sell.objects.order_by('-id_field').first()
             id_ = all_sell.id_field + 1
         except:
             id_ = 10001
         models.Sell.objects.create(id_field=id_, isbn=isbn, customer=customer, number_field=number_, price1=price1,
-                                   price2=price2, address=address, phone=phone,
+                                   price2=price2, address=address, phone=phone, state=state,
                                    create_time=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
         return HttpResponse(js.dumps({"status": 1, 'id': id_}))
     except:
@@ -355,11 +357,11 @@ def change_pre_sell_info(request):
         price1 = request.POST['price1']
         price2 = request.POST['price2']
         address = request.POST['address']
-        finish = request.POST['finish']
         phone = request.POST['phone']
+        state = request.POST['state']
         pre_sell = models.PreSell.objects.filter(id_field=id_)
         pre_sell.update(isbn=isbn, customer=customer, number_field=number_, price1=price1, price2=price2,
-                        address=address, finish=finish, phone=phone)
+                        address=address, phone=phone, state=state)
         return HttpResponse(js.dumps({"status": 1}))
     except:
         return HttpResponse(js.dumps({"status": 0}))
@@ -391,15 +393,15 @@ def add_pre_sell(request):
         price1 = request.POST['price1']
         price2 = request.POST['price2']
         address = request.POST['address']
-        finish = request.POST['finish']
         phone = request.POST['phone']
+        state = request.POST['state']
         try:
             all_sell = models.PreSell.objects.order_by('-id_field').first()
             id_ = all_sell.id_field + 1
         except:
             id_ = 10001
         models.PreSell.objects.create(id_field=id_, isbn=isbn, customer=customer, number_field=number_, price1=price1,
-                                      price2=price2, address=address, finish=finish, phone=phone,
+                                      price2=price2, address=address, phone=phone, state=state,
                                       create_time=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
         return HttpResponse(js.dumps({"status": 1, 'id': id_}))
     except:
@@ -419,9 +421,6 @@ def search_pre_sell(request):
         c = request.GET['c']
         if c:
             pre_sell_list = pre_sell_list.filter(customer__contains=c)
-        d = request.GET['d']
-        if d:
-            pre_sell_list = pre_sell_list.filter(finish=d)
         return render(request, 'frame4.html', {'pre_sell_list': pre_sell_list})
     except:
         return render(request, 'frame4.html', {'pre_sell_list': pre_sell_list})

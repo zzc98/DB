@@ -21,13 +21,6 @@
     <div class="form-group">
         <input type="text" class="form-control" id="search_name" placeholder="用户ID">
     </div>
-    <div class="form-group">
-        <select class="form-control" id="search_finish" style="width: 180px;" title="状态">
-            <option value="">所有</option>
-            <option value="1">已发货</option>
-            <option value="0">未发货</option>
-        </select>
-    </div>
     <button id="change_submit" type="button" class="btn btn-primary" onclick="search_submit()">查询</button>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">添加</button>
 </div>
@@ -44,13 +37,16 @@
             <div class="modal-body">
                 <div id="add">
                     <div class="form-group">
-                        <input type="text" class="form-control" id="add_isbn" placeholder="ISBN" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                        <input type="text" class="form-control" id="add_isbn" placeholder="ISBN"
+                               onkeyup="this.value=this.value.replace(/\D/g,'')">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="add_customer" placeholder="用户ID" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                        <input type="text" class="form-control" id="add_customer" placeholder="用户ID"
+                               onkeyup="this.value=this.value.replace(/\D/g,'')">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="add_number" placeholder="数目" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                        <input type="text" class="form-control" id="add_number" placeholder="数目"
+                               onkeyup="this.value=this.value.replace(/\D/g,'')">
                     </div>
                     <div class="form-group">
                         <input type="text" class="form-control" id="add_price1" placeholder="原价">
@@ -62,12 +58,15 @@
                         <input type="text" class="form-control" id="add_address" placeholder="地址">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="add_phone" placeholder="电话" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                        <input type="text" class="form-control" id="add_phone" placeholder="电话"
+                               onkeyup="this.value=this.value.replace(/\D/g,'')">
                     </div>
                     <div class="form-group">
-                        <select class="form-control" id="add_finish" title="状态">
-                            <option value="1">已发货</option>
-                            <option value="0">未发货</option>
+                        <label for="add_state">状态</label>
+                        <select class="form-control" id="add_state" title="状态">
+                            <option value="1">正在备货</option>
+                            <option value="2">运送中</option>
+                            <option value="3">已收货</option>
                         </select>
                     </div>
                 </div>
@@ -126,10 +125,11 @@
                         <input type="text" class="form-control" id="change_phone" placeholder="电话">
                     </div>
                     <div class="form-group">
-                        <label for="change_finish">状态</label>
-                        <select class="form-control" id="change_finish">
-                            <option value="1">已发货</option>
-                            <option value="0">未发货</option>
+                        <label for="change_state">状态</label>
+                        <select class="form-control" id="change_state">
+                            <option value="1">正在备货</option>
+                            <option value="2">运送中</option>
+                            <option value="3">已收货</option>
                         </select>
                     </div>
                 </div>
@@ -166,14 +166,16 @@
             <td>{{ pre_sell.price2 }}</td>
             <td>{{ pre_sell.address }}</td>
             <td>{{ pre_sell.phone }}</td>
-            {% if pre_sell.finish == 1 %}
+            {% if pre_sell.state == 1 %}
+                <td>待发货</td>
+            {% elif pre_sell.state == 2 %}
                 <td>已发货</td>
             {% else %}
-                <td>未发货</td>
+                <td>确认收货</td>
             {% endif %}
             <td>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal2"
-                        onclick="change_pre_sell('{{ pre_sell.id_field }}','{{ pre_sell.isbn }}','{{ pre_sell.customer }}','{{ pre_sell.number_field }}','{{ pre_sell.price1 }}','{{ pre_sell.price2 }}','{{ pre_sell.address }}','{{ pre_sell.phone }}','{{ pre_sell.finish }}')">
+                        onclick="change_pre_sell('{{ pre_sell.id_field }}','{{ pre_sell.isbn }}','{{ pre_sell.customer }}','{{ pre_sell.number_field }}','{{ pre_sell.price1 }}','{{ pre_sell.price2 }}','{{ pre_sell.address }}','{{ pre_sell.phone }}','{{ pre_sell.state }}')">
                     修改
                 </button>
                 <button class="btn btn-danger" onclick="del_pre_sell('{{ pre_sell.id_field }}')">

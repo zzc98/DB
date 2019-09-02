@@ -55,6 +55,7 @@ class Sell(models.Model):
     address = models.CharField(max_length=2048, blank=True, null=True)
     phone = models.BigIntegerField(blank=True, null=True)
     create_time = models.DateTimeField(blank=True, null=True)
+    state = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -70,9 +71,9 @@ class PreSell(models.Model):
     price1 = models.DecimalField(max_digits=64, decimal_places=0, blank=True, null=True)
     price2 = models.DecimalField(max_digits=64, decimal_places=0, blank=True, null=True)
     address = models.CharField(max_length=2048, blank=True, null=True)
-    finish = models.IntegerField(blank=True, null=True)
     phone = models.BigIntegerField(blank=True, null=True)
     create_time = models.DateTimeField(blank=True, null=True)
+    state = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -106,6 +107,7 @@ class Order1:
         self.address = None
         self.phone = None
         self.time = None
+        self.state = None
 
 
 # 展示预售对象
@@ -119,7 +121,7 @@ class Order2:
         self.price2 = None
         self.address = None
         self.phone = None
-        self.finish = None
+        self.state = None
         self.time = None
 
 

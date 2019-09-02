@@ -1,4 +1,4 @@
-function change_pre_sell(u_id, u_isbn, u_customer, u_number, u_price1, u_price2, u_address, u_phone, u_finish) {
+function change_pre_sell(u_id, u_isbn, u_customer, u_number, u_price1, u_price2, u_address, u_phone, u_state) {
     $('#change_id').val(u_id);
     $('#change_isbn').val(u_isbn);
     $('#change_customer').val(u_customer);
@@ -7,7 +7,7 @@ function change_pre_sell(u_id, u_isbn, u_customer, u_number, u_price1, u_price2,
     $('#change_price2').val(u_price2);
     $('#change_address').val(u_address);
     $("#change_phone").val(u_phone);
-    $('#change_finish').val(u_finish);
+    $('#change_state').val(u_state);
 }
 
 function change_submit() {
@@ -20,7 +20,7 @@ function change_submit() {
         'price2': $('#change_price2').val(),
         'address': $('#change_address').val(),
         'phone': $('#change_phone').val(),
-        'finish': $('#change_finish').val(),
+        'state': $('#change_state').val(),
     };
     $.ajax({
         url: "/manager/change_pre_sell_info",
@@ -29,12 +29,12 @@ function change_submit() {
         success: function (data) {
             data = JSON.parse(data);
             if (data["status"] === 1) {
-              swal({icon: 'success', text: "操作成功"}).then(() => {
+                swal({icon: 'success', text: "操作成功"}).then(() => {
                     window.location.reload();
                 });
             }
             else
-               swal({icon: 'error', text: "操作失败"});
+                swal({icon: 'error', text: "操作失败"});
             $('#change_id').val("");
             $('#change_isbn').val("");
             $('#change_customer').val("");
@@ -67,7 +67,7 @@ function del_pre_sell(pre_sell_id) {
                 });
             }
             else
-               swal({icon: 'error', text: "操作失败"});
+                swal({icon: 'error', text: "操作失败"});
         },
         error: function () {
             swal({icon: 'error', text: "服务异常"});
@@ -86,6 +86,7 @@ function add_submit() {
         "address": $('#add_address').val(),
         "phone": $('#add_phone').val(),
         "finish": $('#add_finish').val(),
+        "state": $("#add_state").val(),
     };
     $.ajax({
         url: " /manager/add_pre_sell",
@@ -94,7 +95,7 @@ function add_submit() {
         success: function (data) {
             data = JSON.parse(data);
             if (data["status"] === 1) {
-               swal({icon: 'success', text: "操作成功"}).then(() => {
+                swal({icon: 'success', text: "操作成功"}).then(() => {
                     window.location.reload();
                 });
                 $('#add_isbn').val("");
@@ -104,7 +105,6 @@ function add_submit() {
                 $('#add_price2').val("");
                 $('#add_address').val("");
                 $('#add_phone').val("");
-                $('#add_finish').val("");
             }
             else
                 swal({icon: 'error', text: "操作失败"});
@@ -119,8 +119,7 @@ function search_submit() {
     let u_id = $('#search_id').val();
     let u_isbn = $('#search_isbn').val();
     let u_name = $('#search_name').val();
-    let u_finish = $('#search_finish').val();
-    window.location.href = "/manager/search_pre_sell/?a=" + u_id + "&b=" + u_isbn + "&c=" + u_name + "&d=" + u_finish;
+    window.location.href = "/manager/search_pre_sell/?a=" + u_id + "&b=" + u_isbn + "&c=" + u_name;
 }
 
 function add_no() {
@@ -131,5 +130,4 @@ function add_no() {
     $("#add_price2").val("");
     $("#add_address").val("");
     $("#add_phone").val("");
-    $("#add_finish").val("");
 }

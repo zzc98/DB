@@ -37,13 +37,16 @@
             <div class="modal-body">
                 <div id="add">
                     <div class="form-group">
-                        <input type="text" class="form-control" id="add_isbn" placeholder="ISBN" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                        <input type="text" class="form-control" id="add_isbn" placeholder="ISBN"
+                               onkeyup="this.value=this.value.replace(/\D/g,'')">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="add_customer" placeholder="用户ID" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                        <input type="text" class="form-control" id="add_customer" placeholder="用户ID"
+                               onkeyup="this.value=this.value.replace(/\D/g,'')">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="add_number" placeholder="数目" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                        <input type="text" class="form-control" id="add_number" placeholder="数目"
+                               onkeyup="this.value=this.value.replace(/\D/g,'')">
                     </div>
                     <div class="form-group">
                         <input type="text" class="form-control" id="add_price1" placeholder="原价">
@@ -52,10 +55,19 @@
                         <input type="text" class="form-control" id="add_price2" placeholder="实际">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="add_phone" placeholder="电话" onkeyup="this.value=this.value.replace(/\D/g,'')">
+                        <input type="text" class="form-control" id="add_phone" placeholder="电话"
+                               onkeyup="this.value=this.value.replace(/\D/g,'')">
                     </div>
                     <div class="form-group">
                         <input type="text" class="form-control" id="add_address" placeholder="地址">
+                    </div>
+                    <div class="form-group">
+                        <label for="change_type">状态</label>
+                        <select class="form-control" id="add_state" title="状态">
+                            <option value="1">正在备货</option>
+                            <option value="2">运送中</option>
+                            <option value="3">已收货</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -113,6 +125,14 @@
                         <label for="change_phone">电话</label>
                         <input type="text" class="form-control" id="change_phone" placeholder="电话">
                     </div>
+                    <div class="form-group">
+                        <label for="change_type">状态</label>
+                        <select class="form-control" id="change_state" title="状态">
+                            <option value="1">正在备货</option>
+                            <option value="2">运送中</option>
+                            <option value="3">已收货</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -126,15 +146,16 @@
 <h2 class="sub-header">Sell List</h2>
 <table class="table table-hover table-bordered">
     <tr>
-        <td style="width: 11%">ID</td>
-        <td style="width: 11%">ISBN</td>
-        <td style="width: 11%">用户ID</td>
-        <td style="width: 11%">数目</td>
-        <td style="width: 11%">原价</td>
-        <td style="width: 11%">实际</td>
-        <td style="width: 11%">地址</td>
-        <td style="width: 11%">电话</td>
-        <td style="width: 11%">操作</td>
+        <td style="width: 10%">ID</td>
+        <td style="width: 10%">ISBN</td>
+        <td style="width: 10%">用户ID</td>
+        <td style="width: 10%">数目</td>
+        <td style="width: 10%">原价</td>
+        <td style="width: 10%">实际</td>
+        <td style="width: 10%">地址</td>
+        <td style="width: 10%">电话</td>
+        <td style="width: 10%">状态</td>
+        <td style="width: 10%">操作</td>
     </tr>
     {% for sell in sell_list %}
         <tr>
@@ -145,13 +166,20 @@
             <td>{{ sell.price1 }}</td>
             <td>{{ sell.price2 }}</td>
             <td>{{ sell.address }}</td>
+            {% if sell.state == 1 %}
+                <td>正在备货中</td>
+            {% elif sell.state == 2 %}
+                <td>运送中</td>
+            {% else %}
+                <td>已收货</td>
+            {% endif %}
             <td>{{ sell.phone }}</td>
             <td>
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal2"
                         onclick="change_sell('{{ sell.id_field }}','{{ sell.isbn }}','{{ sell.customer }}','{{ sell.number_field }}','{{ sell.price1 }}','{{ sell.price2 }}','{{ sell.address }}','{{ sell.phone }}')">
                     修改
-                    </button>
-                        <button class="btn btn-danger " onclick="del_sell('{{ sell.id_field }}')">删除</button>
+                </button>
+                <button class="btn btn-danger " onclick="del_sell('{{ sell.id_field }}')">删除</button>
             </td>
         </tr>
     {% endfor %}
@@ -161,37 +189,38 @@
 </body>
 
 <script>
-   function add_submit1() {
-    let post_data = {
-        "isbn": $('#add_isbn').val(),
-        "customer": $('#add_customer').val(),
-        "number": $('#add_number').val(),
-        "price1": $('#add_price1').val(),
-        "price2": $('#add_price2').val(),
-        "phone": $('#add_phone').val(),
-        "address": $('#add_address').val(),
-    };
-    $.ajax({
-        url: " /manager/add_sell",
-        type: "POST",
-        data: post_data,
-        success: function (data) {
-            data = JSON.parse(data);
-            if (data["status"] == 1) {
-                alert('添加成功，ID号是' + data['id']);
-                location.reload();
-                $('#add_isbn').val("");
-                $('#add_customer').val("");
-                $('#add_number').val("");
-                $('#add_price1').val("");
-                $('#add_price2').val("");
-                $('#add_address').val("");
-                $('#add_phone').val("");
+    function add_submit1() {
+        let post_data = {
+            "isbn": $('#add_isbn').val(),
+            "customer": $('#add_customer').val(),
+            "number": $('#add_number').val(),
+            "price1": $('#add_price1').val(),
+            "price2": $('#add_price2').val(),
+            "phone": $('#add_phone').val(),
+            "address": $('#add_address').val(),
+            "state": $("#add_state").val(),
+        };
+        $.ajax({
+            url: " /manager/add_sell",
+            type: "POST",
+            data: post_data,
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data["status"] === 1) {
+                    alert('添加成功，ID号是' + data['id']);
+                    location.reload();
+                    $('#add_isbn').val("");
+                    $('#add_customer').val("");
+                    $('#add_number').val("");
+                    $('#add_price1').val("");
+                    $('#add_price2').val("");
+                    $('#add_address').val("");
+                    $('#add_phone').val("");
+                }
+                else
+                    alert("添加失败");
             }
-            else
-                alert("添加失败");
-        }
-    });
-}
+        });
+    }
 </script>
 </html>

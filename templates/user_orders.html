@@ -85,9 +85,15 @@
                         '<p>电话：' + info[i].phone + '</p>' +
                         '<p>收货地址：' + info[i].address + '</p>' +
                         '<p>时间：' + info[i].time + '</p></div>' +
-                        '<div class="col-md-2">' +
-                        '<button class="btn btn-default" style="position: relative; top: 200px"' + 'onclick="back1(' + info[i].id_field + ')">退货</button>' +
-                        '</div></div><hr class="hr-content">';
+                        '<div class="col-md-2">';
+                    if (info[i].state === 1) {
+                        tempEle+='<button class="btn btn-default" style="position: relative; top: 200px">正在备货中</button>';
+                    } else if (info[i].state === 2) {
+                        tempEle+='<button class="btn btn-default" style="position: relative; top: 200px"' + 'onclick="confirm1(' + info[i].id_field + ')">确认收货</button>';
+                    } else {
+                        tempEle+='<button class="btn btn-default" style="position: relative; top: 200px"' + 'onclick="back1(' + info[i].id_field + ')">退货</button>';
+                    }
+                    tempEle+='</div></div><hr class="hr-content">';
                     ele[0].append(tempEle);
                 }
             },
@@ -113,7 +119,6 @@
                 ele[1].empty();
                 let info = data.list;
                 for (let i = 0, l = info.length; i < l; i++) {
-                    let t = info[i].finish === 1 ? "已发售" : "尚未发售";
                     let tempEle = '<div class="row">' +
                         '<div class="col-md-3">' +
                         '<img src="' + info[i].img + '" style="width:100%"></div>' +
@@ -126,10 +131,16 @@
                         '<p>电话：' + info[i].phone + '</p>' +
                         '<p>收货地址：' + info[i].address + '</p>' +
                         '<p>时间：' + info[i].time + '</p>' +
-                        '<p>状态：' + t + '</p></div>' +
-                        '<div class="col-md-2">' +
-                        '<button class="btn btn-default" style="position: relative; top: 200px"' + 'onclick="back2(' + info[i].id_field + ')">退货</button>' +
-                        '</div></div><hr class="hr-content">';
+                        '<p></p></div>' +
+                        '<div class="col-md-2">' ;
+                    if (info[i].state === 1) {
+                        tempEle+='<button class="btn btn-default" style="position: relative; top: 200px">正在备货中</button>';
+                    } else if (info[i].state === 2) {
+                        tempEle+='<button class="btn btn-default" style="position: relative; top: 200px"' + 'onclick="confirm2(' + info[i].id_field + ')">确认收货</button>';
+                    } else {
+                        tempEle+='<button class="btn btn-default" style="position: relative; top: 200px"' + 'onclick="back2(' + info[i].id_field + ')">退货</button>';
+                    }
+                    tempEle+='</div></div><hr class="hr-content">';
                     ele[1].append(tempEle);
                 }
             },
@@ -185,8 +196,31 @@
             success: function (data) {
                 data = JSON.parse(data);
                 if (data["status"] === 1) {
-                    swal({icon: 'success', text: '提交成功，等待处理'});
-                    window.location.reload();
+                    swal({icon: 'success', text: '提交成功，等待处理'}).then(()=>{
+                        window.location.reload();
+                    });
+                }
+                else
+                    swal({icon: 'error', text: '提交失败'});
+            },
+            error: function () {
+                swal({icon: 'error', text: '服务异常'});
+            }
+        });
+    }
+
+    function confirm1(sell_id) {
+        let post_data = {'sell_id': sell_id};
+        $.ajax({
+            url: " /user/confirm_order1",
+            type: "POST",
+            data: post_data,
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data["status"] === 1) {
+                    swal({icon: 'success', text: '收货成功'}).then(()=>{
+                        window.location.reload();
+                    });
                 }
                 else
                     swal({icon: 'error', text: '提交失败'});
@@ -208,7 +242,31 @@
             success: function (data) {
                 data = JSON.parse(data);
                 if (data["status"] === 1) {
-                    swal({icon: 'success', text: '提交成功，等待处理'});
+                    swal({icon: 'success', text: '提交成功，等待处理'}).then(()=>{
+                        window.location.reload();
+                    });
+                }
+                else
+                    swal({icon: 'error', text: '提交失败'});
+            },
+            error: function () {
+                swal({icon: 'error', text: '服务异常'});
+            }
+        });
+    }
+
+    function confirm2(pre_sell_id) {
+        let post_data = {
+            'pre_sell_id': pre_sell_id
+        };
+        $.ajax({
+            url: " /user/confirm_order2",
+            type: "POST",
+            data: post_data,
+            success: function (data) {
+                data = JSON.parse(data);
+                if (data["status"] === 1) {
+                    swal({icon: 'success', text: '收货成功'});
                     window.location.reload();
                 }
                 else

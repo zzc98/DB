@@ -72,7 +72,7 @@ def buy_book(request):
             except:
                 id_ = 10001
             models.Sell.objects.create(id_field=id_, isbn=isbn, customer=customer, number_field=number_, price1=price1,
-                                       price2=price2, address=address, phone=phone,
+                                       price2=price2, address=address, phone=phone, state=1,
                                        create_time=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
             book.update(number_field=book.first().number_field - int(number_))
         else:
@@ -82,8 +82,7 @@ def buy_book(request):
             except:
                 id_ = 10001
             models.PreSell.objects.create(id_field=id_, isbn=isbn, customer=customer, number_field=number_,
-                                          price1=price1,
-                                          price2=price2, address=address, finish=0, phone=phone,
+                                          price1=price1, price2=price2, address=address, phone=phone, state=1,
                                           create_time=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
             book.update(number_field=book.first().number_field + int(number_))
         total = math.floor(float(price1) - (float(price1) - float(price2)) * 10)
@@ -223,29 +222,51 @@ def orders(request):
 
 # 销售订单表
 def get_order1(request):
-    try:
-        id_ = request.POST['id']
-        sell_all = models.Sell.objects.filter(customer=id_)
-        sell_all = list(sell_all)
-        sell_list = list()
-        for i in sell_all:
-            try:
-                temp = models.Order1()
-                temp.id_field = i.id_field
-                temp.isbn = i.isbn
-                temp.title = models.Book.objects.filter(isbn=temp.isbn).first().title
-                temp.img = models.Book.objects.filter(isbn=temp.isbn).first().img
-                temp.number_field = i.number_field
-                temp.price2 = str(i.price2)
-                temp.address = i.address
-                temp.phone = i.phone
-                temp.time = str(i.create_time)
-                sell_list.append(models.convert_to_builtin_type(temp))
-            except:
-                continue
-        return HttpResponse(js.dumps({"status": 1, 'list': sell_list}))
-    except:
-        return HttpResponse(js.dumps({"status": 0}))
+    id_ = request.POST['id']
+    sell_all = models.Sell.objects.filter(customer=id_)
+    sell_all = list(sell_all)
+    sell_list = list()
+    for i in sell_all:
+        temp = models.Order1()
+        temp.id_field = i.id_field
+        temp.isbn = i.isbn
+        temp.title = models.Book.objects.filter(isbn=temp.isbn).first().title
+        temp.img = models.Book.objects.filter(isbn=temp.isbn).first().img
+        temp.number_field = i.number_field
+        temp.price2 = str(i.price2)
+        temp.address = i.address
+        temp.phone = i.phone
+        temp.time = str(i.create_time)
+        temp.state = int(i.state)
+        sell_list.append(models.convert_to_builtin_type(temp))
+
+    return HttpResponse(js.dumps({"status": 1, 'list': sell_list}))
+
+
+# try:
+#     id_ = request.POST['id']
+#     sell_all = models.Sell.objects.filter(customer=id_)
+#     sell_all = list(sell_all)
+#     sell_list = list()
+#     for i in sell_all:
+#         try:
+#             temp = models.Order1()
+#             temp.id_field = i.id_field
+#             temp.isbn = i.isbn
+#             temp.title = models.Book.objects.filter(isbn=temp.isbn).first().title
+#             temp.img = models.Book.objects.filter(isbn=temp.isbn).first().img
+#             temp.number_field = i.number_field
+#             temp.price2 = str(i.price2)
+#             temp.address = i.address
+#             temp.phone = i.phone
+#             temp.time = str(i.create_time)
+#             temp.state = int(i.state)
+#             sell_list.append(models.convert_to_builtin_type(temp))
+#         except:
+#             continue
+#     return HttpResponse(js.dumps({"status": 1, 'list': sell_list}))
+# except:
+#     return HttpResponse(js.dumps({"status": 0}))
 
 
 # 预售订单表
@@ -266,8 +287,8 @@ def get_order2(request):
                 temp.price2 = str(i.price2)
                 temp.address = i.address
                 temp.phone = i.phone
-                temp.finish = i.finish
                 temp.time = str(i.create_time)
+                temp.state = int(i.state)
                 pre_sell_list.append(models.convert_to_builtin_type(temp))
             except:
                 continue
@@ -333,5 +354,27 @@ def get_credit_by_id(request):
     try:
         person = models.Customer.objects.get(id_field=id_)
         return HttpResponse(js.dumps({"status": 1, 'credit': person.credit}))
+    except:
+        return HttpResponse(js.dumps({"status": 0}))
+
+
+# 销售订单确认收货
+def confirm1(request):
+    sell_id = request.POST['sell_id']
+    try:
+        sell = models.Sell.objects.filter(id_field=sell_id)
+        sell.update(state=3)  # 状态值又2变为3
+        return HttpResponse(js.dumps({"status": 1}))
+    except:
+        return HttpResponse(js.dumps({"status": 0}))
+
+
+# 预售订单确认收货
+def confirm2(request):
+    pre_sell_id = request.POST['pre_sell_id']
+    try:
+        pre_sell = models.PreSell.objects.filter(id_field=pre_sell_id)
+        pre_sell.update(state=3)  # 状态值又2变为3
+        return HttpResponse(js.dumps({"status": 1}))
     except:
         return HttpResponse(js.dumps({"status": 0}))

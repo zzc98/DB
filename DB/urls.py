@@ -100,4 +100,6 @@ urlpatterns = [
     path('user/getOrder3', uv.get_order3),  # 显示退货订单
     path('user/back_order1', uv.back1),  # 销售书籍退货
     path('user/back_order2', uv.back2),  # 预售书籍退货
+    path('user/confirm_order1', uv.confirm1),  # 销售确认收货
+    path('user/confirm_order2', uv.confirm2),  # 预售确认收货
 ]

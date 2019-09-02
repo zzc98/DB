@@ -19,6 +19,7 @@ function change_submit() {
         'price2': $('#change_price2').val(),
         'address': $('#change_address').val(),
         'phone': $('#change_phone').val(),
+        'state': $("#change_state").val(),
     };
     $.ajax({
         url: "/manager/change_sell_info",

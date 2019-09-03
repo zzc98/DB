@@ -43,27 +43,37 @@ function change_submit() {
 
 // 删除类别
 function del_kind(kind_id) {
-    let post_data = {
-        "kind_id": kind_id
-    };
-    $.ajax({
-        url: " /manager/delete_kind",
-        type: "POST",
-        data: post_data,
-        success: function (data) {
-            data = JSON.parse(data);
-            if (data["status"] === 1) {
-               swal({icon: 'success', text: "操作成功"}).then(() => {
-                    window.location.reload();
-                });
-            }
-            else
-                swal({icon: 'error', text: "修改失败"});
-        },
-        error: function () {
-            swal({icon: 'error', text: "服务异常"});
+    swal({
+        title: "警告",
+        text: "您确定删除该书籍类别？",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then((o) => {
+        if (o) {
+            let post_data = {
+                "kind_id": kind_id
+            };
+            $.ajax({
+                url: " /manager/delete_kind",
+                type: "POST",
+                data: post_data,
+                success: function (data) {
+                    data = JSON.parse(data);
+                    if (data["status"] === 1) {
+                        swal({icon: 'success', text: "操作成功"}).then(() => {
+                            window.location.reload();
+                        });
+                    }
+                    else
+                        swal({icon: 'error', text: "修改失败"});
+                },
+                error: function () {
+                    swal({icon: 'error', text: "服务异常"});
+                }
+            });
         }
-    });
+    })
 }
 
 // 增加类别
@@ -76,7 +86,7 @@ function add_submit() {
         success: function (data) {
             data = JSON.parse(data);
             if (data["status"] === 1) {
-               swal({icon: 'success', text: "操作成功"}).then(() => {
+                swal({icon: 'success', text: "操作成功"}).then(() => {
                     window.location.reload();
                 });
             }

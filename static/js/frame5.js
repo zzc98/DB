@@ -22,7 +22,10 @@ function change_submit() {
         data: post_data,
         success: function (data) {
             data = JSON.parse(data);
-            if (data["status"] === 1) {
+            if (data["status"] === 2) {
+                swal({icon: 'error', text: "操作异常！没有此书或没有此顾客"});
+            }
+            else if (data["status"] === 1) {
                 swal({icon: 'success', text: "操作成功"}).then(() => {
                     window.location.reload();
                 });
@@ -43,25 +46,35 @@ function change_submit() {
 }
 
 function del_back(back_id) {
-    let post_data = {
-        "id": back_id,
-    };
-    $.ajax({
-        url: " /manager/delete_back",
-        type: "POST",
-        data: post_data,
-        success: function (data) {
-            data = JSON.parse(data);
-            if (data["status"] === 1) {
-                swal({icon: 'success', text: "操作成功"}).then(() => {
-                    window.location.reload();
-                });
-            }
-            else
-                swal({icon: 'error', text: "操作失败"});
-        },
-        error: function () {
-            swal({icon: 'error', text: "服务异常"});
+    swal({
+        title: "警告",
+        text: "您确定删除该顾客及其信息？",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then((o) => {
+        if (o) {
+            let post_data = {
+                "id": back_id,
+            };
+            $.ajax({
+                url: " /manager/delete_back",
+                type: "POST",
+                data: post_data,
+                success: function (data) {
+                    data = JSON.parse(data);
+                    if (data["status"] === 1) {
+                        swal({icon: 'success', text: "操作成功"}).then(() => {
+                            window.location.reload();
+                        });
+                    }
+                    else
+                        swal({icon: 'error', text: "操作失败"});
+                },
+                error: function () {
+                    swal({icon: 'error', text: "服务异常"});
+                }
+            });
         }
     });
 }

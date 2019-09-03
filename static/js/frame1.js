@@ -64,25 +64,35 @@ function change_submit() {
 
 // 删除书籍
 function del_book(b_isbn) {
-    let post_data = {"isbn": b_isbn};
-    $.ajax({
-        url: " /manager/delete_book",
-        type: "POST",
-        data: post_data,
-        success: function (data) {
-            data = JSON.parse(data);
-            if (data["status"] === 1) {
-                swal({icon: 'success', text: "操作成功"}).then(() => {
-                    window.location.reload();
-                });
-            }
-            else
-                swal({icon: 'error', text: "删除书籍失败"});
-        },
-        error: function () {
-            swal({icon: 'error', text: "服务异常"});
+    swal({
+        title: "警告",
+        text: "您确定删除该书籍及其信息？",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    }).then((o) => {
+        if (o) {
+            let post_data = {"isbn": b_isbn};
+            $.ajax({
+                url: " /manager/delete_book",
+                type: "POST",
+                data: post_data,
+                success: function (data) {
+                    data = JSON.parse(data);
+                    if (data["status"] === 1) {
+                        swal({icon: 'success', text: "操作成功"}).then(() => {
+                            window.location.reload();
+                        });
+                    }
+                    else
+                        swal({icon: 'error', text: "删除书籍失败"});
+                },
+                error: function () {
+                    swal({icon: 'error', text: "服务异常"});
+                }
+            });
         }
-    });
+    })
 }
 
 // 增加书籍
@@ -144,8 +154,6 @@ function search_submit() {
     window.location.href = "/manager/search_book/?a=" + isbn + "&b=" + title + "&c=" + author + "&d=" + type_ + "&e=" + on_sale;
 
 }
-
-
 
 
 $(function () {

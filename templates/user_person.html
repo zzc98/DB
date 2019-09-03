@@ -106,7 +106,7 @@
                         </div>
                         <div class="form-group">
                             <label for="change_phone">您的电话</label>
-                            <input type="text" class="form-control" id="change_phone">
+                            <input type="text" class="form-control" id="change_phone" onkeyup="value=value.replace(/[^\d]/g,'')">
                         </div>
                         <div class="form-group">
                             <label for="change_gender">您的性别</label>

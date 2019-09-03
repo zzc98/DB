@@ -24,7 +24,7 @@
                     <div class="form-horizontal">
                         <span class="heading">用户登录</span>
                         <div class="form-group">
-                            <input type="text" class="form-control" id="login_id" placeholder="用户电话">
+                            <input type="text" class="form-control" id="login_id" placeholder="手机号" onkeyup="value=value.replace(/[^\d]/g,'')">
                             <i class="fa fa-user"></i>
                         </div>
                         <div class="form-group help">
@@ -66,7 +66,7 @@
                             <i class="fa fa-lock"></i>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" id="register_phone" placeholder="手机号">
+                            <input type="text" class="form-control" id="register_phone" placeholder="手机号" onkeyup="value=value.replace(/[^\d]/g,'')">
                             <i class="fa fa-phone"></i>
                         </div>
                         <div class="form-group">
@@ -117,7 +117,7 @@
     function login() {
         let phone = $("#login_id").val();
         let password = $("#login_password").val();
-        if (id.length === 0 || password.length === 0) {
+        if (phone.length === 0 || password.length === 0) {
             swal({
                 text: "请填写用户ID及密码",
                 icon: "error",

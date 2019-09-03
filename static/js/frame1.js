@@ -145,6 +145,9 @@ function search_submit() {
 
 }
 
+
+
+
 $(function () {
     $("#add_choose_file").click(function () {
         $("#add_img").click();

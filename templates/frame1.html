@@ -57,13 +57,15 @@
                 <div id="add">
                     <form id="my_form1" enctype="multipart/form-data">
                         <div class="form-group">
-                            <input type="text" class="form-control" id="add_isbn" placeholder="ISBN" name="isbn">
+                            <input type="text" class="form-control" id="add_isbn" placeholder="ISBN" name="isbn"
+                                   onkeyup="value=value.replace(/[^\d]/g,'')">
                         </div>
                         <div class="form-group">
                             <input type="text" class="form-control" id="add_title" placeholder="书名" name="title">
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" id="add_price" placeholder="价格" name="price">
+                            <input type="text" class="form-control" id="add_price" placeholder="价格" name="price"
+                                   onkeyup="clearNoNum(this)">
                         </div>
                         <div class="form-group">
                             <input type="text" class="form-control" id="add_author" placeholder="作者" name="author">
@@ -79,7 +81,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" id="add_number" placeholder="数目" name="number">
+                            <input type="text" class="form-control" id="add_number" placeholder="数目" name="number" onkeyup="value=value.replace(/[^\d]/g,'')">
                         </div>
                         <div class="form-group">
                             <select class="form-control" id="add_on_sale" title="状态" name="on_sale">
@@ -118,7 +120,7 @@
                 <div id="change">
                     <div class="form-group">
                         <label for="change_isbn">ISBN</label>
-                        <input type="text" class="form-control" id="change_isbn" placeholder="ISBN">
+                        <input type="text" class="form-control" id="change_isbn" placeholder="ISBN" onkeyup="value=value.replace(/[^\d]/g,'')">
                     </div>
                     <div class="form-group">
                         <label for="change_title">书名</label>
@@ -126,7 +128,7 @@
                     </div>
                     <div class="form-group">
                         <label for="change_price">价格</label>
-                        <input type="text" class="form-control" id="change_price" placeholder="价格">
+                        <input type="text" class="form-control" id="change_price" placeholder="价格" onkeyup="clearNoNum(this)">
                     </div>
                     <div class="form-group">
                         <label for="change_author">作者</label>
@@ -139,14 +141,14 @@
                     <div class="form-group">
                         <label for="change_type">类别</label>
                         <select class="form-control" id="change_type" title="类别" name="type">
-                                {% for i in kind_list %}
-                                    <option value="{{ i.kind_id }}">{{ i.kind_name }}</option>
-                                {% endfor %}
+                            {% for i in kind_list %}
+                                <option value="{{ i.kind_id }}">{{ i.kind_name }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="change_number">数目</label>
-                        <input type="text" class="form-control" id="change_number" placeholder="数目">
+                        <input type="text" class="form-control" id="change_number" placeholder="数目" onkeyup="value=value.replace(/[^\d]/g,'')">
                     </div>
                     <div class="form-group">
                         <label for="change_on_sale">销售状态</label>
@@ -204,5 +206,16 @@
         </tr>
     {% endfor %}
 </table>
+<script>
+    function clearNoNum(obj) {
+        obj.value = obj.value.replace(/[^\d.]/g, ""); //清除“数字”和“.”以外的字符
+        obj.value = obj.value.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
+        obj.value = obj.value.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");
+        obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3');//只能输入两个小数
+        if (obj.value.indexOf(".") < 0 && obj.value != "") {//以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额
+            obj.value = parseFloat(obj.value);
+        }
+    }
+</script>
 </body>
 </html>

@@ -13,13 +13,13 @@
 <!--搜索销售订单-->
 <div id="search" class="form-inline" style="margin: 10px;">
     <div class="form-group">
-        <input type="text" class="form-control" id="search_id" placeholder="ID号">
+        <input type="text" class="form-control" id="search_id" placeholder="ID号" onkeyup="value=value.replace(/[^\d]/g,'')">
     </div>
     <div class="form-group">
-        <input type="text" class="form-control" id="search_isbn" placeholder="ISBN">
+        <input type="text" class="form-control" id="search_isbn" placeholder="ISBN" onkeyup="value=value.replace(/[^\d]/g,'')">
     </div>
     <div class="form-group">
-        <input type="text" class="form-control" id="search_name" placeholder="用户ID">
+        <input type="text" class="form-control" id="search_name" placeholder="用户ID" onkeyup="value=value.replace(/[^\d]/g,'')">
     </div>
     <button id="change_submit" type="button" class="btn btn-primary" onclick="search_submit()">查询</button>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">添加</button>
@@ -49,10 +49,10 @@
                                onkeyup="this.value=this.value.replace(/\D/g,'')">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="add_price1" placeholder="原价">
+                        <input type="text" class="form-control" id="add_price1" placeholder="原价" onkeyup="clearNoNum(this)">
                     </div>
                     <div class="form-group">
-                        <input type="text" class="form-control" id="add_price2" placeholder="实际">
+                        <input type="text" class="form-control" id="add_price2" placeholder="实际" onkeyup="clearNoNum(this)">
                     </div>
                     <div class="form-group">
                         <input type="text" class="form-control" id="add_phone" placeholder="电话"
@@ -99,23 +99,23 @@
                     </div>
                     <div class="form-group">
                         <label for="change_name">ISBN</label>
-                        <input type="text" class="form-control" id="change_isbn" placeholder="书籍ISBN">
+                        <input type="text" class="form-control" id="change_isbn" placeholder="书籍ISBN" onkeyup="this.value=this.value.replace(/\D/g,'')">
                     </div>
                     <div class="form-group">
                         <label for="change_customer">用户ID</label>
-                        <input type="text" class="form-control" id="change_customer" placeholder="用户ID">
+                        <input type="text" class="form-control" id="change_customer" placeholder="用户ID" onkeyup="this.value=this.value.replace(/\D/g,'')">
                     </div>
                     <div class="form-group">
                         <label for="change_number">数目</label>
-                        <input type="text" class="form-control" id="change_number" placeholder="数目">
+                        <input type="text" class="form-control" id="change_number" placeholder="数目" onkeyup="this.value=this.value.replace(/\D/g,'')">
                     </div>
                     <div class="form-group">
                         <label for="change_price1">原价</label>
-                        <input type="text" class="form-control" id="change_price1" placeholder="原价">
+                        <input type="text" class="form-control" id="change_price1" placeholder="原价" onkeyup="clearNoNum(this)">
                     </div>
                     <div class="form-group">
                         <label for="change_price2">实际</label>
-                        <input type="text" class="form-control" id="change_price2" placeholder="实际">
+                        <input type="text" class="form-control" id="change_price2" placeholder="实际" onkeyup="clearNoNum(this)">
                     </div>
                     <div class="form-group">
                         <label for="change_address">地址</label>
@@ -123,7 +123,7 @@
                     </div>
                     <div class="form-group">
                         <label for="change_phone">电话</label>
-                        <input type="text" class="form-control" id="change_phone" placeholder="电话">
+                        <input type="text" class="form-control" id="change_phone" placeholder="电话" onkeyup="this.value=this.value.replace(/\D/g,'')">
                     </div>
                     <div class="form-group">
                         <label for="change_type">状态</label>
@@ -221,6 +221,16 @@
                     alert("添加失败");
             }
         });
+    }
+
+    function clearNoNum(obj) {
+        obj.value = obj.value.replace(/[^\d.]/g, ""); //清除“数字”和“.”以外的字符
+        obj.value = obj.value.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
+        obj.value = obj.value.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");
+        obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3');//只能输入两个小数
+        if (obj.value.indexOf(".") < 0 && obj.value != "") {//以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额
+            obj.value = parseFloat(obj.value);
+        }
     }
 </script>
 </html>

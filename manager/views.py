@@ -229,8 +229,8 @@ def add_user(request):
         sex = request.POST["sex"]
         birthday = request.POST["birthday"]
         address = request.POST["address"]
-        check = models.Customer.objects.fliter(phone=phone)
-        if check.count() == 0:
+        check = models.Customer.objects.filter(phone=phone)
+        if check.count() > 0:
             return HttpResponse(js.dumps({"status": 2}))
         try:
             all_user = models.Customer.objects.order_by('-id_field').first()

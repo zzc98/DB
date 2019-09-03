@@ -181,15 +181,15 @@ def register(request):
         address = request.POST["address"]
         sex = request.POST["sex"]
         birthday = request.POST["birthday"]
+        check = models.Customer.objects.filter(phone=phone)
+        if check.count() > 0:
+            return HttpResponse(js.dumps({"status": 2}))
         try:
-            check = models.Customer.objects.fliter(phone=phone)
-            if check.count() == 0:
-                return HttpResponse(js.dumps({"status": 2}))
             all_user = models.Customer.objects.order_by('-id_field').first()
             uid = all_user.id_field + 1
         except:
             uid = 10001
-        models.Customer.objects.create(id_field=uid, name=name, password=password, phone=phone, credit=0,
+        models.Customer.objects.create(id_field=uid, name=name, password=password, phone=phone,
                                        address=address, sex=sex, birthday=birthday)
         return HttpResponse(js.dumps({"status": 1, 'id': uid}))
     else:

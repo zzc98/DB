@@ -278,6 +278,10 @@ def change_sell_info(request):
         phone = request.POST['phone']
         state = request.POST['state']
         sell = models.Sell.objects.filter(id_field=id_)
+        book = models.Book.objects.filter(isbn=isbn)
+        user = models.Customer.objects.filter(id_field=customer)
+        if book.count() == 0 or user.count() == 0:
+            return HttpResponse(js.dumps({"status": 2}))
         sell.update(isbn=isbn, customer=customer, number_field=number_, price1=price1, price2=price2, address=address,
                     phone=phone, state=state)
         return HttpResponse(js.dumps({"status": 1}))
@@ -362,6 +366,10 @@ def change_pre_sell_info(request):
         address = request.POST['address']
         phone = request.POST['phone']
         state = request.POST['state']
+        book = models.Book.objects.filter(isbn=isbn)
+        user = models.Customer.objects.filter(id_field=customer)
+        if book.count() == 0 or user.count() == 0:
+            return HttpResponse(js.dumps({"status": 2}))
         pre_sell = models.PreSell.objects.filter(id_field=id_)
         pre_sell.update(isbn=isbn, customer=customer, number_field=number_, price1=price1, price2=price2,
                         address=address, phone=phone, state=state)
@@ -446,6 +454,10 @@ def change_back_info(request):
         finish = request.POST['finish']
         back = models.Back.objects.filter(id_field=id_)
         back.update(isbn=isbn, customer=customer, number_field=number_, money=money, finish=finish)
+        book = models.Book.objects.filter(isbn=isbn)
+        user = models.Customer.objects.filter(id_field=customer)
+        if book.count() == 0 or user.count() == 0:
+            return HttpResponse(js.dumps({"status": 2}))
         return HttpResponse(js.dumps({"status": 1}))
     except:
         return HttpResponse(js.dumps({"status": 0}))

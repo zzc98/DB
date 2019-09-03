@@ -136,7 +136,7 @@
                         text: "登录成功",
                         icon: "success",
                     }).then(() => {
-                        document.cookie = "CID=" + id;
+                        document.cookie = "CID=" + data['id'];
                         window.location.href = '/user/index';
                     });
 

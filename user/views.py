@@ -189,7 +189,7 @@ def register(request):
             uid = all_user.id_field + 1
         except:
             uid = 10001
-        models.Customer.objects.create(id_field=uid, name=name, password=password, phone=phone,
+        models.Customer.objects.create(id_field=uid, name=name, password=password, phone=phone, credit=0,
                                        address=address, sex=sex, birthday=birthday)
         return HttpResponse(js.dumps({"status": 1, 'id': uid}))
     else:

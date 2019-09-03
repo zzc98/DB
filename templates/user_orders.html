@@ -87,13 +87,13 @@
                         '<p>时间：' + info[i].time + '</p></div>' +
                         '<div class="col-md-2">';
                     if (info[i].state === 1) {
-                        tempEle+='<button class="btn btn-default" style="position: relative; top: 200px">正在备货中</button>';
+                        tempEle += '<button class="btn btn-default" style="position: relative; top: 200px">正在备货中</button>';
                     } else if (info[i].state === 2) {
-                        tempEle+='<button class="btn btn-default" style="position: relative; top: 200px"' + 'onclick="confirm1(' + info[i].id_field + ')">确认收货</button>';
+                        tempEle += '<button class="btn btn-default" style="position: relative; top: 200px"' + 'onclick="confirm1(' + info[i].id_field + ')">确认收货</button>';
                     } else {
-                        tempEle+='<button class="btn btn-default" style="position: relative; top: 200px"' + 'onclick="back1(' + info[i].id_field + ')">退货</button>';
+                        tempEle += '<button class="btn btn-default" style="position: relative; top: 200px"' + 'onclick="back1(' + info[i].id_field + ')">退货</button>';
                     }
-                    tempEle+='</div></div><hr class="hr-content">';
+                    tempEle += '</div></div><hr class="hr-content">';
                     ele[0].append(tempEle);
                 }
             },
@@ -132,15 +132,15 @@
                         '<p>收货地址：' + info[i].address + '</p>' +
                         '<p>时间：' + info[i].time + '</p>' +
                         '<p></p></div>' +
-                        '<div class="col-md-2">' ;
+                        '<div class="col-md-2">';
                     if (info[i].state === 1) {
-                        tempEle+='<button class="btn btn-default" style="position: relative; top: 200px">正在备货中</button>';
+                        tempEle += '<button class="btn btn-default" style="position: relative; top: 200px">正在备货中</button>';
                     } else if (info[i].state === 2) {
-                        tempEle+='<button class="btn btn-default" style="position: relative; top: 200px"' + 'onclick="confirm2(' + info[i].id_field + ')">确认收货</button>';
+                        tempEle += '<button class="btn btn-default" style="position: relative; top: 200px"' + 'onclick="confirm2(' + info[i].id_field + ')">确认收货</button>';
                     } else {
-                        tempEle+='<button class="btn btn-default" style="position: relative; top: 200px"' + 'onclick="back2(' + info[i].id_field + ')">退货</button>';
+                        tempEle += '<button class="btn btn-default" style="position: relative; top: 200px"' + 'onclick="back2(' + info[i].id_field + ')">退货</button>';
                     }
-                    tempEle+='</div></div><hr class="hr-content">';
+                    tempEle += '</div></div><hr class="hr-content">';
                     ele[1].append(tempEle);
                 }
             },
@@ -196,7 +196,7 @@
             success: function (data) {
                 data = JSON.parse(data);
                 if (data["status"] === 1) {
-                    swal({icon: 'success', text: '提交成功，等待处理'}).then(()=>{
+                    swal({icon: 'success', text: '提交成功，等待处理'}).then(() => {
                         window.location.reload();
                     });
                 }
@@ -218,7 +218,7 @@
             success: function (data) {
                 data = JSON.parse(data);
                 if (data["status"] === 1) {
-                    swal({icon: 'success', text: '收货成功'}).then(()=>{
+                    swal({icon: 'success', text: '收货成功'}).then(() => {
                         window.location.reload();
                     });
                 }
@@ -242,7 +242,7 @@
             success: function (data) {
                 data = JSON.parse(data);
                 if (data["status"] === 1) {
-                    swal({icon: 'success', text: '提交成功，等待处理'}).then(()=>{
+                    swal({icon: 'success', text: '提交成功，等待处理'}).then(() => {
                         window.location.reload();
                     });
                 }

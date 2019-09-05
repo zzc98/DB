@@ -188,6 +188,9 @@
                         window.location.reload();
                     });
                 }
+                else if (data["status"] === 2) {
+                    swal({icon: 'error', text: "无法对admin做修改操作!!"});
+                }
                 else
                     swal({icon: 'error', text: "修改失败"});
                 $("#change_manager_id").val("");
@@ -226,7 +229,9 @@
                                 window.location.reload();
                             });
                         }
-                        else
+                        else if (data["status"] === 2) {
+                            swal({icon: 'error', text: "无法删除admin!!"});
+                        } else
                             swal({icon: 'error', text: "操作失败"});
                     },
                     error: function () {

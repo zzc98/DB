@@ -622,6 +622,8 @@ def add_manager(request):
 def del_manager(request):
     try:
         manager_id = request.POST['manager_id']
+        if manager_id == '10001':
+            return HttpResponse(js.dumps({"status": 2}))
         manager = models.Manager.objects.get(id_field=manager_id)
         manager.delete()
         return HttpResponse(js.dumps({"status": 1}))
@@ -633,6 +635,8 @@ def del_manager(request):
 def change_manager(request):
     try:
         manager_id = request.POST['manager_id']
+        if manager_id == '10001':
+            return HttpResponse(js.dumps({"status": 2}))
         manager_name = request.POST['manager_name']
         manager_password = request.POST['manager_password']
         manager = models.Manager.objects.filter(id_field=manager_id)

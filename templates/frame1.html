@@ -170,20 +170,22 @@
 <h2 class="sub-header">Book List</h2>
 <table class="table table-hover table-bordered">
     <tr>
-        <td style="width: 10%">ISBN</td>
-        <td style="width: 10%">书名</td>
-        <td style="width: 10%">价格</td>
-        <td style="width: 10%">作者</td>
+        <td style="width:9% ">ISBN</td>
+        <td style="width:9% ">书名</td>
+        <td style="width:9% ">图片</td>
+        <td style="width:9% ">价格</td>
+        <td style="width:9% ">作者</td>
         <td style="width: 20%">描述</td>
-        <td style="width: 10%">类别</td>
-        <td style="width: 10%">剩余量/待售量</td>
-        <td style="width: 10%">状态</td>
-        <td style="width: 10%; text-align: center">操作</td>
+        <td style="width:9% ">类别</td>
+        <td style="width:5% ">剩余量/待售量</td>
+        <td style="width:9% ">状态</td>
+        <td style="width:10%; text-align: center">操作</td>
     </tr>
     {% for book in book_list %}
         <tr>
             <td>{{ book.isbn }}</td>
             <td>{{ book.title }}</td>
+            <td><img src="{{ book.img }}" style="width:50%"></td>
             <td>{{ book.price }}</td>
             <td>{{ book.author }}</td>
             <td>{{ book.des }}</td>
@@ -194,7 +196,7 @@
             {% else %}
                 <td>预售中</td>
             {% endif %}
-            <td>
+            <td style="width:10%; text-align: center">
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal2"
                         onclick="change_book('{{ book.isbn }}','{{ book.title }}','{{ book.price }}','{{ book.author }}','{{ book.des }}','{{ book.type_field }}','{{ book.number_field }}','{{ book.on_sale }}')">
                     修改

@@ -189,7 +189,7 @@
                     });
                 }
                 else if (data["status"] === 2) {
-                    swal({icon: 'error', text: "无法对admin做修改操作!!"});
+                    swal({icon: 'error', text: "无权对admin做修改操作!!"});
                 }
                 else
                     swal({icon: 'error', text: "修改失败"});
@@ -230,7 +230,7 @@
                             });
                         }
                         else if (data["status"] === 2) {
-                            swal({icon: 'error', text: "无法删除admin!!"});
+                            swal({icon: 'error', text: "无权对admin做修改操作!!"});
                         } else
                             swal({icon: 'error', text: "操作失败"});
                     },

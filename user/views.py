@@ -246,7 +246,7 @@ def get_order1(request):
                 sell_list.append(models.convert_to_builtin_type(temp))
             except:
                 continue
-        return HttpResponse(js.dumps({"status": 1, 'list': sell_list}))
+        return HttpResponse(js.dumps({"status": 1, 'list': list(reversed(sell_list))}))
     except:
         return HttpResponse(js.dumps({"status": 0}))
 
@@ -274,7 +274,7 @@ def get_order2(request):
                 pre_sell_list.append(models.convert_to_builtin_type(temp))
             except:
                 continue
-        return HttpResponse(js.dumps({"status": 1, 'list': pre_sell_list}))
+        return HttpResponse(js.dumps({"status": 1, 'list': list(reversed(pre_sell_list))}))
     except:
         return HttpResponse(js.dumps({"status": 0}))
 
@@ -296,7 +296,7 @@ def get_order3(request):
             temp.finish = i.finish
             temp.time = str(i.create_time)
             back_list.append(models.convert_to_builtin_type(temp))
-        return HttpResponse(js.dumps({"status": 1, 'list': back_list}))
+        return HttpResponse(js.dumps({"status": 1, 'list': list(reversed(back_list))}))
     except:
         return HttpResponse(js.dumps({"status": 0}))
 
